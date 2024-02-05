@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "547250871756",
+    "project_id": "litxchange-76bcd",
+    "storage_bucket": "litxchange-76bcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547250871756:android:ba0c981851fdcee91f1169",
+        "android_client_info": {
+          "package_name": "com.litx.litxchange"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlTaETiVuWg3th2h6mD81Wvl8u0Sun0fA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
