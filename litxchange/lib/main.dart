@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart'; // Import the Firebase core package
 import 'package:litxchange/screens/wrapper.dart';
 
-void main() {
-  runApp(const MyApp());
+// Updated main function to initialize Firebase
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Required for Firebase initialization
+  await Firebase.initializeApp(); // Initialize Firebase
+  runApp(const MyApp()); // Run the app
 }
 
 class MyApp extends StatelessWidget {
@@ -12,8 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        home:wrapper(),
+      home:wrapper(),
     );
   }
 }
-

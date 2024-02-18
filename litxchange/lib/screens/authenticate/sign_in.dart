@@ -18,12 +18,12 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text('Sign in to LitXChange'),
+        title: const Text('Sign in to LitXChange'),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
         child: ElevatedButton(
-          child: Text('sign in anon'),
+          child: const Text('sign in anon'),
           onPressed: () async {
             dynamic result = await _auth.signInAnon();
             if(result == null){
