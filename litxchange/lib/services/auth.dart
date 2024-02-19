@@ -1,28 +1,42 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthService{
+class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  //sign in anon
-Future signInAnon() async {
-  try{
-    UserCredential result = await _auth.signInAnonymously();
-    User? user = result.user;
 
-// Now, you can use 'user' with null-aware operations
-    if (user != null) {
-      // Do something with 'user'
-      print(user.uid);
-    } else {
-      // Handle the case when 'user' is null
-      print('Anonymous sign-in failed');
-    }
-     return user;
-    }
-    catch(e)
-    {
+  // Existing sign in anonymously method
+  Future signInAnon() async {
+    try {
+      UserCredential result = await _auth.signInAnonymously();
+      User? user = result.user;
+      if (user != null) {
+        print(user.uid);
+      } else {
+        print('Anonymous sign-in failed');
+      }
+      return user;
+    } catch (e) {
       print(e.toString());
       return null;
     }
-}
+  }
 
+  // Function to send sign-in link to email
+  Future<void> sendSignInLinkToEmail(String email, ActionCodeSettings settings) async {
+    try {
+      return await _auth.sendSignInLinkToEmail(email: email, actionCodeSettings: settings);
+    } catch (e) {
+      print("Error sending sign-in link: ${e.toString()}");
+      return null;
+    }
+  }
+
+  // Function to sign in with the email link
+  Future<UserCredential?> signInWithEmailLink(String email, String link) async {
+    try {
+      return await _auth.signInWithEmailLink(email: email, emailLink: link);
+    } catch (e) {
+      print("Error signing in with email link: ${e.toString()}");
+      return null;
+    }
+  }
 }
