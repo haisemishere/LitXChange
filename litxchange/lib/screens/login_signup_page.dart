@@ -45,42 +45,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   @override
- /* Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) => value!.isEmpty ? 'Please enter an email' : null,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Password'),
-                validator: (value) => value!.length < 6 ? 'Password must be at least 6 characters' : null,
-              ),
-              TextFormField(
-                controller: _confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Confirm Password'),
-                validator: (value) => value != _passwordController.text ? 'Passwords do not match' : null,
-              ),
-              ElevatedButton(
-                onPressed: _registerUser,
-                child: const Text('Sign Up'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }*/
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
@@ -139,7 +103,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                         child: Container(
                           margin: EdgeInsets.only(top: 50),
                           child: Center(
-                            child: Text("Login", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),),
+                            child: Text("SignUp", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),),
                           ),
                         ),
                       )
@@ -232,7 +196,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                         ),
                       ),
                       SizedBox(height: 70,),
-                      Text("Forgot Password?", style: TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),),
+
                     ],
                   ),
                 )
