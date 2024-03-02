@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import '/screens/login_signup_page.dart';
 import '/screens/home.dart';
-import '/services/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
@@ -207,6 +206,24 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     SizedBox(height: 70),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginSignupPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Don\'t have an account? Sign Up',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )
