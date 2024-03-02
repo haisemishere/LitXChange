@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart'; // Import the Firebase core package
 import 'firebase_options.dart';
-import 'package:litxchange/screens/login_signup_page.dart'; // Ensure this path matches where you've created the LoginSignupPage
+import '/screens/login.dart';
+import '/screens/login_signup_page.dart';
 
 // Updated main function to initialize Firebase
 void main() async {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginSignupPage(), // Use LoginSignupPage as the home widget
+      home: Login(), // Use LoginSignupPage as the home widget
     );
   }
 }

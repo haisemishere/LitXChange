@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:litxchange/screens/home.dart';
 import 'package:litxchange/services/auth.dart'; // Adjust import based on your project structure
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginSignupPage extends StatefulWidget {
   @override
@@ -31,6 +33,16 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             await user.sendEmailVerification();
             print("Verification email sent.");
             // Navigate to your app's home screen or show a success message
+            if (user.emailVerified) {
+              // Navigate to the home screen or show a success message
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Home()), // Replace Home() with your desired page
+              );
+            } else {
+              // If email is not verified, you can show a message to the user
+              print("Email not verified. Please verify your email.");
+            }
           }
         } on FirebaseAuthException catch (e) {
           // Handle errors, such as email already in use or weak password
