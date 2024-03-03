@@ -15,18 +15,35 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _loginUser() async {
-    try {
-      String email=_emailController.text.trim();
-      String password=_passwordController.text.trim();
-      UserCredential? userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-      // If login successful, navigate to Home
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-    } on FirebaseAuthException catch (ex) {
-      print(ex);
-      // Handle FirebaseAuthException here, you can show error message to the user
+    if (_formKey.currentState!.validate()) {
+      // If form is valid, proceed with login
+      try {
+        String email = _emailController.text.trim();
+        String password = _passwordController.text.trim();
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+        // If login successful, navigate to Home
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      } on FirebaseAuthException catch (ex) {
+          // Display error message for invalid credentials
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Login Failed'),
+              content: Text('Invalid email or password.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+      }
     }
-
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,9 +157,12 @@ class _LoginState extends State<Login> {
                                   border: InputBorder.none,
                                   labelText: 'Email',
                                 ),
-                                validator: (value) => value!.isEmpty
-                                    ? 'Please enter an email'
-                                    : null,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter an email';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             Container(
@@ -154,9 +174,12 @@ class _LoginState extends State<Login> {
                                   border: InputBorder.none,
                                   labelText: 'Password',
                                 ),
-                                validator: (value) => value!.length < 6
-                                    ? 'Password must be at least 6 characters'
-                                    : null,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter a password';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                           ],
@@ -208,5 +231,4 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
 }
