@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '/screens/login_signup_page.dart';
 import '/screens/home.dart';
@@ -14,43 +15,17 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _loginUser() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        // Query Firestore to check if the email exists
-        QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await FirebaseFirestore.instance
-            .collection('users')
-            .where('email', isEqualTo: _emailController.text.trim())
-            .limit(1)
-            .get();
-
-        if (querySnapshot.docs.isNotEmpty) {
-          // Email exists, now check if the password matches
-          String storedPassword =
-          querySnapshot.docs[0]['password']; // Assuming 'password' is the field name in Firestore
-
-          if (storedPassword == _passwordController.text.trim()) {
-            // Password matches, proceed with login
-            print("Login successful.");
-
-            // Navigate to the home screen or any desired screen
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => Home()), // Replace Home() with your desired page
-            );
-          } else {
-            // Password does not match
-            print("Incorrect password.");
-          }
-        } else {
-          // Email does not exist
-          print("Email not found.");
-        }
-      } catch (e) {
-        // Handle any errors
-        print("Error: $e");
-      }
+    try {
+      String email=_emailController.text.trim();
+      String password=_passwordController.text.trim();
+      UserCredential? userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      // If login successful, navigate to Home
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    } on FirebaseAuthException catch (ex) {
+      print(ex);
+      // Handle FirebaseAuthException here, you can show error message to the user
     }
+
   }
 
   @override

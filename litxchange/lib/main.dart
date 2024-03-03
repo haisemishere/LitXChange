@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart'; // Import the Firebase core p
 import 'firebase_options.dart';
 import '/screens/login.dart';
 import '/screens/login_signup_page.dart';
+import '/screens/home.dart';
 
 // Updated main function to initialize Firebase
 void main() async {
