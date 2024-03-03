@@ -45,9 +45,21 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             }
           }
         } on FirebaseAuthException catch (e) {
-          // Handle errors, such as email already in use or weak password
-          print("Error: ${e.code}");
-          print(e.message);
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('SignUp Failed'),
+              content: Text('Account with this email already exists'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
       } else {
         // Handle password confirmation mismatch
