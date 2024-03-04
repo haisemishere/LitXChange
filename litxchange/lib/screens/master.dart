@@ -3,7 +3,7 @@ import 'add.dart';
 import 'home.dart';
 import 'profile.dart';
 import 'search.dart';
-import 'message.dart';
+import 'notifications.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
     HomePage(),
     SearchPage(),
     AddPage(),
-    MessagingPage(),
+    NotificationsPage(), // Use NotificationsPage instead of MessagingPage
     ProfilePage(),
   ];
 
@@ -32,9 +32,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -64,8 +61,8 @@ class _HomeState extends State<Home> {
               label: 'Add',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              label: 'Messaging',
+              icon: Icon(Icons.notifications), // Change to notifications icon
+              label: 'Notifications', // Change label to Notifications
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
