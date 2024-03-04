@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6676bcf-03f8-4331-82e5-12e6a3c0037d" name="Changes" comment="" />
+    <list default="true" id="b6676bcf-03f8-4331-82e5-12e6a3c0037d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/litxchange/lib/screens/add.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/litxchange/lib/screens/master.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/litxchange/lib/screens/message.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/litxchange/lib/screens/profile.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/litxchange/lib/screens/search.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/litxchange/lib/screens/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/litxchange/lib/screens/home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/litxchange/lib/screens/login.dart" beforeDir="false" afterPath="$PROJECT_DIR$/litxchange/lib/screens/login.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/litxchange/lib/screens/login_signup_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/litxchange/lib/screens/login_signup_page.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
