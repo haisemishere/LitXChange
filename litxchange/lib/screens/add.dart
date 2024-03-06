@@ -154,8 +154,39 @@ class _AddPageState extends State<AddPage> {
       'date': post.date,
       'imageUrl': post.imageUrl, // Store the image URL in Firestore
     })
-        .then((value) => print("Post added successfully"))
-        .catchError((error) => print("Failed to add post: $error"));
+        .then((value) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+          title: Text('Post Successful'),
+        content: Text('Post Added successfully'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              _bookNameController.clear();
+              _descriptionController.clear();
+              _genreController.clear();
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    ))
+        .catchError((error) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Post Failed'),
+        content: Text('Unable to add this post'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    ));
   }
 }
 
