@@ -43,7 +43,7 @@ class _AddPageState extends State<AddPage> {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        _image = File(pickedFile.path); // Convert PickedFile to File
       } else {
         print('No image selected.');
       }
