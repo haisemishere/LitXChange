@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,7 +34,6 @@ class _AddPageState extends State<AddPage> {
   final TextEditingController _bookNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
-
   File? _image;
 
   Future<void> _getImage() async {
@@ -56,7 +54,7 @@ class _AddPageState extends State<AddPage> {
       appBar: AppBar(
         title: Text('New Post'),
       ),
-      body: Padding(
+      body: SingleChildScrollView( // Make the content scrollable
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +98,13 @@ class _AddPageState extends State<AddPage> {
               child: Text('Pick Image'),
             ),
             SizedBox(height: 20),
-            _image != null ? Image.file(_image!) : SizedBox(),
+            _image != null
+                ? Container(
+              // Constrain the size of the image
+              height: 200, // Set a fixed height for the image
+              child: Image.file(_image!, fit: BoxFit.cover), // Adjust the fit as needed
+            )
+                : SizedBox(height: 2, width: 2),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -115,49 +119,90 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  void _savePost() async {
+  void _savePost() async
+  {
     String bookName = _bookNameController.text.trim();
     String description = _descriptionController.text.trim();
     String genre = _genreController.text.trim();
 
-    // Perform any additional validations here
+    // Initialize imageUrl as null.
+    String? imageUrl;
 
-    String imageUrl = '';
-    if (_image != null) {
-      final storageRef = FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
-      final uploadTask = storageRef.putFile(_image!);
-      await uploadTask.whenComplete(() async {
+    try {
+      if (_image != null) {
+        final storageRef = FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
+        final uploadTask = storageRef.putFile(_image!);
+
+        // Await for the upload to complete and then get the download URL.
+        await uploadTask;
         imageUrl = await storageRef.getDownloadURL();
+      }
+
+      // Proceed to save the post with or without an imageUrl.
+      await FirebaseFirestore.instance.collection('posts').add({
+        'userId': FirebaseAuth.instance.currentUser!.uid,
+        'bookName': bookName,
+        'description': description,
+        'genre': genre,
+        'date': DateTime.now(),
+        'imageUrl': imageUrl ?? "", // Use the imageUrl if available; otherwise, use an empty string.
       });
+
+      // Show a success dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Post Successful'),
+          content: Text('Post Added successfully'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _bookNameController.clear();
+                _descriptionController.clear();
+                _genreController.clear();
+                setState(() {
+                  _image = null; // Reset the image
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } catch (error) {
+      // Show an error dialog if anything goes wrong during the upload or Firestore save process.
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Post Failed'),
+          content: Text('Unable to add this post. Error: $error'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      print("Error adding post: $error");
     }
-
-    Post newPost = Post(
-      userId: FirebaseAuth.instance.currentUser!.uid,
-      bookName: bookName,
-      description: description,
-      genre: genre,
-      date: DateTime.now(),
-      imageUrl: imageUrl,
-    );
-
-    _saveToDatabase(newPost);
-  }
-
-  void _saveToDatabase(Post post) {
-    CollectionReference posts = FirebaseFirestore.instance.collection('posts');
-    posts
-        .add({
-      'userId': post.userId,
-      'bookName': post.bookName,
-      'description': post.description,
-      'genre': post.genre,
-      'date': post.date,
-      'imageUrl': post.imageUrl, // Store the image URL in Firestore
-    })
-        .then((value) => showDialog(
+    // Assuming you have a Post model class
+    // This part of the code depends on how you've set up Firestore data model
+    // and might require adjustments based on your Firestore collection structure
+    FirebaseFirestore.instance.collection('posts').add({
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+      'bookName': bookName,
+      'description': description,
+      'genre': genre,
+      'date': DateTime.now(),
+      'imageUrl': imageUrl, // Store the image URL in Firestore
+    }).then((value) => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-          title: Text('Post Successful'),
+        title: Text('Post Successful'),
         content: Text('Post Added successfully'),
         actions: [
           TextButton(
@@ -171,8 +216,7 @@ class _AddPageState extends State<AddPage> {
           ),
         ],
       ),
-    ))
-        .catchError((error) => showDialog(
+    )).catchError((error) => showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Post Failed'),
@@ -188,22 +232,4 @@ class _AddPageState extends State<AddPage> {
       ),
     ));
   }
-}
-
-class Post {
-  final String userId;
-  final String bookName;
-  final String description;
-  final String genre;
-  final DateTime date;
-  final String imageUrl; // Define image URL property
-
-  Post({
-    required this.userId,
-    required this.bookName,
-    required this.description,
-    required this.genre,
-    required this.date,
-    required this.imageUrl, // Initialize image URL property
-  });
 }
