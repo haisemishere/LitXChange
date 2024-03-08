@@ -6,7 +6,9 @@ import 'search.dart';
 import 'notifications.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final String userId;
+
+  const Home({Key? key, required this.userId}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -14,14 +16,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
+  late List<Widget> _widgetOptions;
 
-  List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    SearchPage(),
-    AddPage(),
-    NotificationsPage(), // Use NotificationsPage instead of MessagingPage
-    ProfilePage(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _widgetOptions = <Widget>[
+      HomePage(),
+      SearchPage(),
+      AddPage(),
+      NotificationsPage(),
+      ProfilePage(), // Initialize ProfilePage with userId
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,8 +68,8 @@ class _HomeState extends State<Home> {
               label: 'Add',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications), // Change to notifications icon
-              label: 'Notifications', // Change label to Notifications
+              icon: Icon(Icons.notifications),
+              label: 'Notifications',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
@@ -78,3 +85,4 @@ class _HomeState extends State<Home> {
     );
   }
 }
+

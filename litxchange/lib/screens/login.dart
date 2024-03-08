@@ -21,29 +21,28 @@ class _LoginState extends State<Login> {
         String email = _emailController.text.trim();
         String password = _passwordController.text.trim();
         UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-        // If login successful, navigate to Home
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+        // If login successful, navigate to Home with user ID
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Home(userId: userCredential.user!.uid)));
       } on FirebaseAuthException catch (ex) {
-          // Display error message for invalid credentials
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Login Failed'),
-              content: Text('Invalid email or password.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
+        // Display error message for invalid credentials
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Invalid email or password.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
