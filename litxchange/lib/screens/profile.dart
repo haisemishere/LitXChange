@@ -19,9 +19,9 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   late FirebaseFirestore _firestore;
   late String _userId;
-  String _username = "Username";
-  String _bio = "Bio";
-  String _city = "City";
+  String _username = "";
+  String _bio = "";
+  String _city = "";
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
         DocumentSnapshot userData =
         await _firestore.collection('users').doc(_userId).get();
         setState(() {
-          _username = userData['username'];
+          _username = userData['userName'];
           _bio = userData['bio'];
           _city = userData['city'];
         });
