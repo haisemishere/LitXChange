@@ -11,6 +11,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
+
+
 class PostList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,14 +41,26 @@ class PostList extends StatelessWidget {
             return ListTile(
               title: Text(post['bookName']),
               subtitle: Text(post['description']),
-              trailing: post['imageUrl'] != null
-                  ? Image.network(
-                post['imageUrl'],
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              )
-                  : null,
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.swap_horiz), // Icon for swap request
+                    onPressed: () {
+                      // Handle swap request button press for this post
+                      // You can navigate to a swap request page or perform any other action here
+                    },
+                  ),
+                  post['imageUrl'] != null
+                      ? Image.network(
+                    post['imageUrl'],
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  )
+                      : SizedBox(width: 50, height: 50), // Placeholder for image if not available
+                ],
+              ),
             );
           },
         );
@@ -54,3 +68,4 @@ class PostList extends StatelessWidget {
     );
   }
 }
+
