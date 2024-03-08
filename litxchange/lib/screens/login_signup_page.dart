@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/screens/master.dart';
 import '/screens/login.dart';
+import '/screens/createuserprofile.dart';
 import '/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -32,17 +33,20 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             // Send email verification link
             await user.sendEmailVerification();
             print("Verification email sent.");
+
+
+
             // Navigate to your app's home screen or show a success message
-            if (user.emailVerified) {
+            //if (user.emailVerified) {
               // Navigate to the home screen or show a success message
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => ProfileCreationPage()),
               );
-            } else {
+           // } else {
               // If email is not verified, you can show a message to the user
-              print("Email not verified. Please verify your email.");
-            }
+             // print("Email not verified. Please verify your email.");
+            //}
           }
         } on FirebaseAuthException catch (e) {
           showDialog(
