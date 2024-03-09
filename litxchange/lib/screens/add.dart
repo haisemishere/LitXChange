@@ -185,7 +185,18 @@ class _AddPageState extends State<AddPage> {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _getImage,
-                child: Text('Pick Image'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 17), // Button padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // Button border radius
+                  ),
+                  elevation: 3, // Button shadow
+                ),
+                child: Text(
+                  'Pick Image',
+                  style: TextStyle(fontSize: 16), // Button text style
+                ),
               ),
               SizedBox(height: 16),
               _image != null
@@ -206,7 +217,18 @@ class _AddPageState extends State<AddPage> {
                 onPressed: () {
                   _savePost();
                 },
-                child: Text('Post'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 17), // Button padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // Button border radius
+                  ),
+                  elevation: 3, // Button shadow
+                ),
+                child: Text(
+                  'Post',
+                  style: TextStyle(fontSize: 16), // Button text style
+                ),
               ),
             ],
           ),

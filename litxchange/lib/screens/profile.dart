@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:litxchange/screens/login.dart';
 
 void main() async {
@@ -25,7 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
   String _city = "";
   String _profilePictureUrl = "https://via.placeholder.com/150";
 
-
   @override
   void initState() {
     super.initState();
@@ -38,12 +38,14 @@ class _ProfilePageState extends State<ProfilePage> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         _userId = user.uid;
-        DocumentSnapshot userData = await _firestore.collection('users').doc(_userId).get();
+        DocumentSnapshot userData =
+        await _firestore.collection('users').doc(_userId).get();
         setState(() {
-          _username = userData['userName'] ?? ''; // Use a null-aware operator in case the field is missing
+          _username = userData['userName'] ?? '';
           _bio = userData['bio'] ?? '';
           _city = userData['city'] ?? '';
-          _profilePictureUrl = userData['profilePictureUrl'] ?? "https://via.placeholder.com/150"; // Update this line
+          _profilePictureUrl =
+              userData['profilePictureUrl'] ?? "https://via.placeholder.com/150";
         });
       }
     } catch (error) {
@@ -95,14 +97,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: NetworkImage(_profilePictureUrl), // Updated to use _profilePictureUrl
-                backgroundColor: Colors.transparent, // To handle cases where the image fails to load
+                backgroundImage: NetworkImage(_profilePictureUrl),
+                backgroundColor: Colors.transparent,
               ),
             ),
             SizedBox(height: 20),
             Center(
               child: Text(
-                _username, // User's username
+                _username,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -112,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 10),
             Center(
               child: Text(
-                _bio, // User's bio
+                _bio,
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -121,15 +123,111 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 10),
             Center(
               child: Text(
-                _city, // User's city
+                _city,
                 style: TextStyle(
                   fontSize: 16,
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            Divider(), // Add a divider to separate profile info from posts
+            SizedBox(height: 10),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            ),
+            SizedBox(height: 10),
+            _buildUserPostsList(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildUserPostsList() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('posts')
+          .where('userId', isEqualTo: _userId) // Filter posts by current user's ID
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        }
+        final posts = snapshot.data!.docs;
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: posts.length,
+          itemBuilder: (context, index) {
+            var post = posts[index];
+            var date = post['date'].toDate();
+            var formattedDate = DateFormat.yMMMMd().format(date);
+            String authorName = post['authorName'] ?? 'Unknown Author';
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+
+                    ),
+                    ListTile(
+                      title: Text(
+                        '${post['bookName']} by $authorName',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(post['genre']),
+                    ),
+                    post['imageUrl'] != null
+                        ? Image.network(
+                      post['imageUrl'],
+                      fit: BoxFit.cover,
+                    )
+                        : SizedBox.shrink(),
+                    SizedBox(height: 8.0),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            formattedDate,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              // Handle more options button press for this post
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
