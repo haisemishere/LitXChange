@@ -198,19 +198,35 @@ class _EditProfilePageState extends State<EditProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Username'),
+            Text('Username',style: TextStyle(fontWeight: FontWeight.bold),),
+            SizedBox(height: 8),
             TextFormField(
               controller: _usernameController,
+              decoration: InputDecoration(
+                hintText: 'Enter Username',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 20),
-            Text('Bio'),
+            Text('Bio',style: TextStyle(fontWeight: FontWeight.bold),),
+            SizedBox(height: 8),
             TextFormField(
               controller: _bioController,
+              decoration: InputDecoration(
+                hintText: 'Enter a short description about yourself',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 20),
-            Text('City'),
+            Text('City',
+              style: TextStyle(fontWeight: FontWeight.bold),),
+            SizedBox(height: 8),
             TextFormField(
               controller: _cityController,
+              decoration: InputDecoration(
+                hintText: 'Enter your city',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -222,8 +238,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 );
                 Navigator.pop(context);
               },
-              child: Text('Save'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 17), // Button padding
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // Button border radius
+                ),
+                elevation: 3, // Button shadow
+              ),
+              child: Text(
+                'Save',
+                style: TextStyle(fontSize: 16), // Button text style
+              ),
             ),
+
           ],
         ),
       ),
