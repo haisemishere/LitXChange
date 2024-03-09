@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '/screens/home.dart';
-
+import '/screens/master.dart'; 
 class ProfileCreationPage extends StatefulWidget {
   @override
   _ProfileCreationPageState createState() => _ProfileCreationPageState();
@@ -88,13 +86,15 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
         });
       }
 
-      // Navigate to another page or show a success message
-      print('Profile created/updated successfully');
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>HomePage()));
+      // Navigate to Home page with user ID parameter
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home(userId: userId)));
     } catch (error) {
       print('Error creating/updating profile: $error');
+      // Show error dialog
+      showDialog(
+        context: context,
         builder: (context) => AlertDialog(
-          title: Text('Profile Creation Failed Failed'),
+          title: Text('Profile Creation Failed'),
           content: Text('Invalid information'),
           actions: [
             TextButton(
@@ -104,11 +104,10 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
               child: Text('OK'),
             ),
           ],
-        );
+        ),
+      );
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
