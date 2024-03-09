@@ -80,7 +80,7 @@ class PostList extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            subtitle: Text(post['description']),
+                            subtitle: Text(post['genre']),
                           ),
                           post['imageUrl'] != null
                               ? Image.network(
