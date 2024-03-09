@@ -215,7 +215,34 @@ class _ProfilePageState extends State<ProfilePage> {
                           IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
-                              // Handle more options button press for this post
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Delete Post"),
+                                    content: Text("Are you sure you want to delete this post?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context); // Close the dialog
+                                        },
+                                        child: Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          // Delete the post from Firestore
+                                          await FirebaseFirestore.instance
+                                              .collection('posts')
+                                              .doc(post.id) // Use the document's ID
+                                              .delete();
+                                          Navigator.pop(context); // Close the dialog
+                                        },
+                                        child: Text("Delete"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
                         ],
