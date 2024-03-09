@@ -113,6 +113,7 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Create Profile'),
       ),
       body: Padding(
@@ -125,32 +126,70 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
+            Text('Username', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
             TextFormField(
               controller: _userNameController,
-              decoration: InputDecoration(labelText: 'User Name'),
+              decoration: InputDecoration(
+                hintText: 'Enter Username',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 20),
-            TextFormField(
-              controller: _cityController,
-              decoration: InputDecoration(labelText: 'City'),
-            ),
-            SizedBox(height: 20),
+            Text('Bio', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
             TextFormField(
               controller: _bioController,
-              decoration: InputDecoration(labelText: 'Bio'),
-              maxLines: null,
+              decoration: InputDecoration(
+                hintText: 'Enter a short description about yourself',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text('City', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            TextFormField(
+              controller: _cityController,
+              decoration: InputDecoration(
+                hintText: 'Enter your city',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _getImage,
-              child: Text('Select Profile Picture'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue, // Text color
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // Button border radius
+                ),
+                elevation: 3, // Button shadow
+              ),
+              child: Text(
+                'Save',
+                style: TextStyle(fontSize: 16), // Button text style
+              ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
             _profilePicture != null ? Image.file(_profilePicture!) : SizedBox(),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
             ElevatedButton(
               onPressed: _submitProfile,
-              child: Text('Submit'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue, // Text color
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // Button border radius
+                ),
+                elevation: 3, // Button shadow
+              ),
+              child: Text(
+                'Select Profile Picture',
+                style: TextStyle(fontSize: 16), // Button text style
+              ),
             ),
           ],
         ),
