@@ -17,7 +17,6 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
-
 class _ProfilePageState extends State<ProfilePage> {
   late FirebaseFirestore _firestore;
   late String _userId;
@@ -25,12 +24,14 @@ class _ProfilePageState extends State<ProfilePage> {
   String _bio = "";
   String _city = "";
   String _profilePictureUrl = "https://via.placeholder.com/150";
+  String _userEmail = '';
 
   @override
   void initState() {
     super.initState();
     _firestore = FirebaseFirestore.instance;
     _fetchUserData();
+    _fetchUserEmail(); // Fetch user email
   }
 
   Future<void> _fetchUserData() async {
@@ -53,6 +54,15 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _fetchUserEmail() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        _userEmail = user.email ?? '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     currentBio: _bio,
                     currentCity: _city,
                     onUpdate: _updateUserData,
+                    userEmail: _userEmail, // Pass user email to EditProfilePage
                   ),
                 ),
               );
@@ -161,6 +172,11 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }
         final posts = snapshot.data!.docs;
+        if (posts.isEmpty) {
+          return Center(
+            child: Text('No posts available'),
+          );
+        }
         return ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
@@ -182,7 +198,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-
                     ),
                     ListTile(
                       title: Text(
@@ -220,11 +235,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text("Delete Post"),
-                                    content: Text("Are you sure you want to delete this post?"),
+                                    content: Text(
+                                        "Are you sure you want to delete this post?"),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.pop(context); // Close the dialog
+                                          Navigator.pop(
+                                              context); // Close the dialog
                                         },
                                         child: Text("Cancel"),
                                       ),
@@ -235,7 +252,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                               .collection('posts')
                                               .doc(post.id) // Use the document's ID
                                               .delete();
-                                          Navigator.pop(context); // Close the dialog
+                                          Navigator.pop(
+                                              context); // Close the dialog
                                         },
                                         child: Text("Delete"),
                                       ),
@@ -286,12 +304,14 @@ class EditProfilePage extends StatefulWidget {
   final String currentBio;
   final String currentCity;
   final Function(String, String, String) onUpdate;
+  final String userEmail; // User email
 
   EditProfilePage({
     required this.currentUsername,
     required this.currentBio,
     required this.currentCity,
     required this.onUpdate,
+    required this.userEmail, // Pass user email to EditProfilePage
   });
 
   @override
@@ -323,7 +343,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Username',style: TextStyle(fontWeight: FontWeight.bold),),
+            Text('Email: ${widget.userEmail}'), // Display user email
+            SizedBox(height: 20),
+            Text('Username', style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             TextFormField(
               controller: _usernameController,
@@ -333,7 +355,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             SizedBox(height: 20),
-            Text('Bio',style: TextStyle(fontWeight: FontWeight.bold),),
+            Text('Bio', style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             TextFormField(
               controller: _bioController,
@@ -343,8 +365,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             SizedBox(height: 20),
-            Text('City',
-              style: TextStyle(fontWeight: FontWeight.bold),),
+            Text('City', style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             TextFormField(
               controller: _cityController,
@@ -364,7 +385,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue, // Text color
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8), // Button border radius
@@ -376,7 +398,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 style: TextStyle(fontSize: 16), // Button text style
               ),
             ),
-
           ],
         ),
       ),
