@@ -22,6 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String _username = "";
   String _bio = "";
   String _city = "";
+  String _profilePictureUrl = "https://via.placeholder.com/150";
+
 
   @override
   void initState() {
@@ -35,12 +37,12 @@ class _ProfilePageState extends State<ProfilePage> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         _userId = user.uid;
-        DocumentSnapshot userData =
-        await _firestore.collection('users').doc(_userId).get();
+        DocumentSnapshot userData = await _firestore.collection('users').doc(_userId).get();
         setState(() {
-          _username = userData['userName'];
-          _bio = userData['bio'];
-          _city = userData['city'];
+          _username = userData['userName'] ?? ''; // Use a null-aware operator in case the field is missing
+          _bio = userData['bio'] ?? '';
+          _city = userData['city'] ?? '';
+          _profilePictureUrl = userData['profilePictureUrl'] ?? "https://via.placeholder.com/150"; // Update this line
         });
       }
     } catch (error) {
@@ -80,8 +82,8 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: NetworkImage(
-                    'https://via.placeholder.com/150'), // User profile image
+                backgroundImage: NetworkImage(_profilePictureUrl), // Updated to use _profilePictureUrl
+                backgroundColor: Colors.transparent, // To handle cases where the image fails to load
               ),
             ),
             SizedBox(height: 20),
