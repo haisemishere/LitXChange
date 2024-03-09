@@ -32,6 +32,7 @@ class AddPage extends StatefulWidget {
 
 class _AddPageState extends State<AddPage> {
   final TextEditingController _bookNameController = TextEditingController();
+  final TextEditingController _authorNameController = TextEditingController();
   String _selectedCondition = 'New'; // Default selected condition
   String _selectedGenre = 'Fiction'; // Default selected genre
   File? _image;
@@ -107,6 +108,7 @@ class _AddPageState extends State<AddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('New Post'),
       ),
       body: SingleChildScrollView( // Wrap the entire content with SingleChildScrollView
@@ -124,6 +126,19 @@ class _AddPageState extends State<AddPage> {
                 controller: _bookNameController,
                 decoration: InputDecoration(
                   hintText: 'Enter the book name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Author',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: _authorNameController,
+                decoration: InputDecoration(
+                  hintText: 'Enter the Author Name',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -201,6 +216,7 @@ class _AddPageState extends State<AddPage> {
   }
   void _savePost() async {
     String bookName = _bookNameController.text.trim();
+    String authorName = _authorNameController.text.trim();
     String condition = _selectedCondition;
     String genre = _selectedGenre;
     String? imageUrl;
@@ -216,6 +232,7 @@ class _AddPageState extends State<AddPage> {
       await FirebaseFirestore.instance.collection('posts').add({
         'userId': FirebaseAuth.instance.currentUser!.uid,
         'bookName': bookName,
+        'authorName': authorName,
         'condition': condition,
         'genre': genre,
         'date': DateTime.now(),
@@ -231,6 +248,7 @@ class _AddPageState extends State<AddPage> {
             TextButton(
               onPressed: () {
                 _bookNameController.clear();
+                _authorNameController.clear();
                 setState(() {
                   _selectedCondition = _conditionItems[0];
                   _selectedGenre = _genreItems[0];
