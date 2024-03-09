@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('BookXchange'),
+      ),
       body: PostList(),
     );
   }
 }
-
-
 
 class PostList extends StatelessWidget {
   @override
@@ -38,34 +40,98 @@ class PostList extends StatelessWidget {
           itemCount: posts.length,
           itemBuilder: (context, index) {
             var post = posts[index];
-            return ListTile(
-              title: Text(post['bookName']),
-              subtitle: Text(post['description']),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.swap_horiz), // Icon for swap request
-                    onPressed: () {
-                      // Handle swap request button press for this post
-                      // You can navigate to a swap request page or perform any other action here
-                    },
-                  ),
-                  post['imageUrl'] != null
-                      ? Image.network(
-                    post['imageUrl'],
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  )
-                      : SizedBox(width: 50, height: 50), // Placeholder for image if not available
-                ],
-              ),
+            var date = post['date'].toDate();
+            var formattedDate = DateFormat.yMMMMd().format(date);
+            return FutureBuilder(
+              future: _fetchUsername(post['userId']),
+              builder: (context, AsyncSnapshot<String> usernameSnapshot) {
+                if (usernameSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (usernameSnapshot.hasError) {
+                  return Text('Error: ${usernameSnapshot.error}');
+                } else {
+                  String username = usernameSnapshot.data ?? 'Unknown User';
+                  return Padding(
+                    padding:
+                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              formattedDate,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            title: Text(
+                              post['bookName'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(post['description']),
+                          ),
+                          post['imageUrl'] != null
+                              ? Image.network(
+                            post['imageUrl'],
+                            fit: BoxFit.cover,
+                          )
+                              : SizedBox.shrink(), // Placeholder for image if not available
+                          SizedBox(height: 8.0),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  username,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.swap_horiz),
+                                  onPressed: () {
+                                    // Handle more options button press for this post
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
             );
           },
         );
       },
     );
   }
-}
 
+  Future<String> _fetchUsername(String userId) async {
+    try {
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      return userData['userName'] ?? 'Unknown User';
+    } catch (error) {
+      print("Error fetching username: $error");
+      return 'Unknown User';
+    }
+  }
+}
