@@ -322,14 +322,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _usernameController;
   late TextEditingController _bioController;
   late TextEditingController _cityController;
+  String _userEmail = '';
 
   @override
   void initState() {
+    _fetchUserEmail();
     super.initState();
     _usernameController =
         TextEditingController(text: widget.currentUsername);
     _bioController = TextEditingController(text: widget.currentBio);
     _cityController = TextEditingController(text: widget.currentCity);
+  }
+
+  Future<void> _fetchUserEmail() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        _userEmail = user.email ?? '';
+      });
+    }
   }
 
   @override
@@ -344,7 +355,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Email: ${widget.userEmail}'), // Display user email
+            Text(
+              'Email: $_userEmail',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 20),
             Text('Username', style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
