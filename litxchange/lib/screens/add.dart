@@ -187,7 +187,7 @@ class _AddPageState extends State<AddPage> {
                 onPressed: _getImage,
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 17), // Button padding
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8), // Button border radius
                   ),
@@ -219,7 +219,7 @@ class _AddPageState extends State<AddPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 17), // Button padding
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8), // Button border radius
                   ),
