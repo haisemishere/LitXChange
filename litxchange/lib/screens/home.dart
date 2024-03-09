@@ -6,18 +6,6 @@ import 'package:intl/intl.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('BookXchange'),
-      ),
-      body: PostList(),
-    );
-  }
-}
-
-class PostList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
     final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
     return StreamBuilder(
@@ -43,7 +31,7 @@ class PostList extends StatelessWidget {
             var date = post['date'].toDate();
             var formattedDate = DateFormat.yMMMMd().format(date);
             return FutureBuilder(
-              future: _fetchUsername(post['userId']),
+              future: _fetchUsername(post['userId']), // Fetch username
               builder: (context, AsyncSnapshot<String> usernameSnapshot) {
                 if (usernameSnapshot.connectionState ==
                     ConnectionState.waiting) {
@@ -52,6 +40,7 @@ class PostList extends StatelessWidget {
                   return Text('Error: ${usernameSnapshot.error}');
                 } else {
                   String username = usernameSnapshot.data ?? 'Unknown User';
+                  String authorName = post['authorName'] ?? 'Unknown Author'; // Fetch authorName from the post
                   return Padding(
                     padding:
                     EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -75,7 +64,7 @@ class PostList extends StatelessWidget {
                           ),
                           ListTile(
                             title: Text(
-                              post['bookName'],
+                              '${post['bookName']} by $authorName', // Display author's name separately
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -135,3 +124,5 @@ class PostList extends StatelessWidget {
     }
   }
 }
+
+
