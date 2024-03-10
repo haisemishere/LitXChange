@@ -1,4 +1,4 @@
-# LitXchange
+# LitXChange
 
 LitXchange is a mobile application developed using Flutter and Firebase, designed to connect users within local communities for the purpose of exchanging books. 
 
