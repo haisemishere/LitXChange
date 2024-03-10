@@ -56,7 +56,8 @@ class HomePage extends StatelessWidget {
                     return CircularProgressIndicator();
                   } else if (usernameSnapshot.hasError) {
                     return Text('Error: ${usernameSnapshot.error}');
-                  } else {
+                  } else
+                  {
                     String username = usernameSnapshot.data ?? 'Unknown User';
                     String authorName = post['authorName'] ?? 'Unknown Author'; // Fetch authorName from the post
                     return Padding(
