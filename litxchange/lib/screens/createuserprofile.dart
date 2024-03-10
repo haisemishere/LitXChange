@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/screens/master.dart';
+
 class ProfileCreationPage extends StatefulWidget {
   @override
   _ProfileCreationPageState createState() => _ProfileCreationPageState();
@@ -116,82 +117,84 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
         automaticallyImplyLeading: false,
         title: Text('Create Profile'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Email: $_userEmail',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            Text('Username', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            TextFormField(
-              controller: _userNameController,
-              decoration: InputDecoration(
-                hintText: 'Enter Username',
-                border: OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Email: $_userEmail',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(height: 20),
-            Text('Bio', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            TextFormField(
-              controller: _bioController,
-              decoration: InputDecoration(
-                hintText: 'Enter a short description about yourself',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text('City', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            TextFormField(
-              controller: _cityController,
-              decoration: InputDecoration(
-                hintText: 'Enter your city',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _getImage,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue, // Text color
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8), // Button border radius
+              SizedBox(height: 20),
+              Text('Username', style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: _userNameController,
+                decoration: InputDecoration(
+                  hintText: 'Enter Username',
+                  border: OutlineInputBorder(),
                 ),
-                elevation: 3, // Button shadow
               ),
-              child: Text(
-                'Save',
-                style: TextStyle(fontSize: 16), // Button text style
-              ),
-            ),
-            SizedBox(height: 16),
-            _profilePicture != null ? Image.file(_profilePicture!) : SizedBox(),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _submitProfile,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue, // Text color
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8), // Button border radius
+              SizedBox(height: 20),
+              Text('Bio', style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: _bioController,
+                decoration: InputDecoration(
+                  hintText: 'Enter a short description about yourself',
+                  border: OutlineInputBorder(),
                 ),
-                elevation: 3, // Button shadow
               ),
-              child: Text(
-                'Select Profile Picture',
-                style: TextStyle(fontSize: 16), // Button text style
+              SizedBox(height: 20),
+              Text('City', style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: _cityController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your city',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _getImage,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue, // Text color
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // Button border radius
+                  ),
+                  elevation: 3, // Button shadow
+                ),
+                child: Text(
+                  'Select Profile Picture',
+                  style: TextStyle(fontSize: 16), // Button text style
+                ),
+              ),
+              SizedBox(height: 16),
+              _profilePicture != null ? Image.file(_profilePicture!) : SizedBox(),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _submitProfile,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue, // Text color
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // Button border radius
+                  ),
+                  elevation: 3, // Button shadow
+                ),
+                child: Text(
+                  'Save',
+                  style: TextStyle(fontSize: 16), // Button text style
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
