@@ -4,6 +4,10 @@ import 'home.dart';
 import 'profile.dart';
 import 'search.dart';
 import 'notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   final String userId;
@@ -18,6 +22,9 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   late List<Widget> _widgetOptions;
 
+  late String _profilePictureUrl;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   void initState() {
     super.initState();
@@ -26,8 +33,24 @@ class _HomeState extends State<Home> {
       SearchPage(),
       AddPage(),
       NotificationsPage(),
-      ProfilePage(), // Initialize ProfilePage with userId
+      ProfilePage(),
     ];
+    _fetchProfilePictureUrl();
+  }
+
+  Future<void> _fetchProfilePictureUrl() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        String userId = user.uid;
+        DocumentSnapshot userData = await _firestore.collection('users').doc(userId).get();
+        setState(() {
+          _profilePictureUrl = userData['profilePictureUrl'] ?? "https://via.placeholder.com/150";
+        });
+      }
+    } catch (error) {
+      print("Error fetching profile picture URL: $error");
+    }
   }
 
   void _onItemTapped(int index) {
@@ -72,7 +95,12 @@ class _HomeState extends State<Home> {
               label: 'Notifications',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: _profilePictureUrl.isNotEmpty
+                  ? CircleAvatar(
+                radius: 14,
+                backgroundImage: NetworkImage(_profilePictureUrl),
+              )
+                  : Icon(Icons.person), // Fallback to default icon if profile picture URL is empty
               label: 'Profile',
             ),
           ],
@@ -85,4 +113,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
