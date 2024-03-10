@@ -12,18 +12,28 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(8.0), // Add padding here
-          child: Text(
-            'LitXChange',
-            style: TextStyle(
-              fontSize: 24, // Adjust font size as needed
-              fontWeight: FontWeight.bold, // Make the text bold
-              fontFamily: 'Lucida Calligraphy', // Change the font family
-              color: Colors.black, // Set text color
-              // Add more decorations as needed
+        title: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(
+              'assets/images/logo.png', // Path to your logo image
+              height: 120, // Adjust height as needed
+              width: 200, // Adjust width as needed
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.all(8.0), // Add padding here
+              child: Text(
+                '',
+                style: TextStyle(
+                  fontSize: 24, // Adjust font size as needed
+                  fontWeight: FontWeight.bold, // Make the text bold
+                  fontFamily: 'Lucida Calligraphy', // Change the font family
+                  color: Colors.black, // Set text color
+                  // Add more decorations as needed
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: StreamBuilder(
