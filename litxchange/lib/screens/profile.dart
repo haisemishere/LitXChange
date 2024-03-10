@@ -84,14 +84,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     currentBio: _bio,
                     currentCity: _city,
                     profilePictureUrl: _profilePictureUrl,
-                    onUpdate: (newUsername, newBio, newCity, newProfilePictureUrl) {
+                    onUpdate: (newUsername, newBio, newCity, newProfilePictureUrl) async {
                       setState(() {
                         _username = newUsername;
                         _bio = newBio;
                         _city = newCity;
                         _profilePictureUrl = newProfilePictureUrl;
                       });
-                      _saveUserData();
+                      await _saveUserData();
+                      Navigator.pop(context); // Go back to profile page after saving
                     },
                     userEmail: _userEmail, // Pass user email to EditProfilePage
                   ),
@@ -288,16 +289,16 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _updateUserData(String newUsername, String newBio, String newCity) {
+  Future<void> _updateUserData(String newUsername, String newBio, String newCity) async {
     setState(() {
       _username = newUsername;
       _bio = newBio;
       _city = newCity;
     });
-    _saveUserData();
+    await _saveUserData();
   }
 
-  void _saveUserData() async {
+  Future<void> _saveUserData() async {
     try {
       await _firestore.collection('users').doc(_userId).set({
         'username': _username,
