@@ -24,7 +24,26 @@ class _SearchPageState extends State<SearchPage> {
     _searchStream = FirebaseFirestore.instance.collection('posts').snapshots();
   }
 
-  void _performSearch() {
+  Future<String> _fetchUserid(String userName) async {
+    try {
+      QuerySnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .where('userName', isEqualTo: userName)
+          .limit(1) // Limit the result to 1 document
+          .get();
+      if (userData.docs.isNotEmpty) {
+        // Check if any document is found
+        return userData.docs[0]['uid'] ?? 'Unknown User';
+      } else {
+        return 'Unknown User';
+      }
+    } catch (error) {
+      print("Error fetching username: $error");
+      return 'Unknown User';
+    }
+  }
+
+  void _performSearch() async {
     String searchText = _searchController.text.trim();
     String fieldName;
     switch (_searchOption) {
@@ -32,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
         fieldName = 'authorName';
         break;
       case SearchOption.UserName:
-        fieldName = 'userName';
+        fieldName = 'userId';
         break;
       case SearchOption.BookName:
       default:
@@ -41,6 +60,11 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     if (searchText.isNotEmpty) {
+      if (fieldName == 'userId') {
+        print(searchText);
+        searchText = await _fetchUserid(searchText);
+        print(searchText);// Await the result of _fetchUserid
+      }
       _searchStream = FirebaseFirestore.instance
           .collection('posts')
           .where(fieldName, isEqualTo: searchText)
@@ -50,6 +74,7 @@ class _SearchPageState extends State<SearchPage> {
     }
     setState(() {}); // Trigger rebuild to update search results
   }
+
 
   @override
   Widget build(BuildContext context) {
