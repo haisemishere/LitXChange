@@ -29,10 +29,9 @@ class _SearchPageState extends State<SearchPage> {
       QuerySnapshot userData = await FirebaseFirestore.instance
           .collection('users')
           .where('userName', isEqualTo: userName)
-          .limit(1) // Limit the result to 1 document
+          .limit(1)
           .get();
       if (userData.docs.isNotEmpty) {
-        // Check if any document is found
         return userData.docs[0]['uid'] ?? 'Unknown User';
       } else {
         return 'Unknown User';
@@ -61,9 +60,7 @@ class _SearchPageState extends State<SearchPage> {
 
     if (searchText.isNotEmpty) {
       if (fieldName == 'userId') {
-        print(searchText);
         searchText = await _fetchUserid(searchText);
-        print(searchText);// Await the result of _fetchUserid
       }
       _searchStream = FirebaseFirestore.instance
           .collection('posts')
@@ -72,9 +69,8 @@ class _SearchPageState extends State<SearchPage> {
     } else {
       _searchStream = FirebaseFirestore.instance.collection('posts').snapshots();
     }
-    setState(() {}); // Trigger rebuild to update search results
+    setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +92,6 @@ class _SearchPageState extends State<SearchPage> {
                       hintText: 'Search by ${_searchOption.toString().split('.').last}',
                       prefixIcon: Icon(Icons.search),
                     ),
-
                   ),
                 ),
                 SizedBox(width: 10),
@@ -105,60 +100,60 @@ class _SearchPageState extends State<SearchPage> {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.blue,
-                    // Text color
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    // Button padding
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          8), // Button border radius
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    elevation: 3, // Button shadow
+                    elevation: 3,
                   ),
                   child: Text(
                     'Search',
-                    style: TextStyle(fontSize: 16), // Button text style
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Radio(
-                value: SearchOption.BookName,
-                groupValue: _searchOption,
-                onChanged: (SearchOption? value) {
-                  setState(() {
-                    _searchOption = value!;
-                  });
-                },
-              ),
-              Text('Book Name'),
-              Radio(
-                value: SearchOption.AuthorName,
-                groupValue: _searchOption,
-                onChanged: (SearchOption? value) {
-                  setState(() {
-                    _searchOption = value!;
-                  });
-                },
-              ),
-              Text('Author Name'),
-              Radio(
-                value: SearchOption.UserName,
-                groupValue: _searchOption,
-                onChanged: (SearchOption? value) {
-                  setState(() {
-                    _searchOption = value!;
-                  });
-                },
-              ),
-              Text('User Name'),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Radio(
+                  value: SearchOption.BookName,
+                  groupValue: _searchOption,
+                  onChanged: (SearchOption? value) {
+                    setState(() {
+                      _searchOption = value!;
+                    });
+                  },
+                ),
+                Text('Book Name'),
+                Radio(
+                  value: SearchOption.AuthorName,
+                  groupValue: _searchOption,
+                  onChanged: (SearchOption? value) {
+                    setState(() {
+                      _searchOption = value!;
+                    });
+                  },
+                ),
+                Text('Author Name'),
+                Radio(
+                  value: SearchOption.UserName,
+                  groupValue: _searchOption,
+                  onChanged: (SearchOption? value) {
+                    setState(() {
+                      _searchOption = value!;
+                    });
+                  },
+                ),
+                Text('User Name'),
+              ],
+            ),
           ),
           Expanded(
-            child: _buildSearchResults(), // Display search results here
+            child: _buildSearchResults(),
           ),
         ],
       ),
@@ -205,7 +200,7 @@ class _SearchPageState extends State<SearchPage> {
             var date = post['date'].toDate();
             var formattedDate = DateFormat.yMMMMd().format(date);
             return FutureBuilder(
-              future: _fetchUsername(post['userId']), // Fetch username
+              future: _fetchUsername(post['userId']),
               builder: (context, AsyncSnapshot<String> usernameSnapshot) {
                 if (usernameSnapshot.connectionState ==
                     ConnectionState.waiting) {
@@ -214,7 +209,7 @@ class _SearchPageState extends State<SearchPage> {
                   return Text('Error: ${usernameSnapshot.error}');
                 } else {
                   String username = usernameSnapshot.data ?? 'Unknown User';
-                  String authorName = post['authorName'] ?? 'Unknown Author'; //
+                  String authorName = post['authorName'] ?? 'Unknown Author';
 
                   return Padding(
                     padding: EdgeInsets.symmetric(
