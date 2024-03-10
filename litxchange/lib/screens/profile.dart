@@ -83,21 +83,24 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(_profilePictureUrl),
-            ),
-            SizedBox(height: 20),
-            Text(_username, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Text(_bio, style: TextStyle(fontSize: 16)),
-            SizedBox(height: 10),
-            Text(_city, style: TextStyle(fontSize: 16)),
-            // Add more widgets here for user posts and other info
-          ],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 20),
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(_profilePictureUrl),
+              ),
+              SizedBox(height: 20),
+              Text(_username, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Text(_bio, style: TextStyle(fontSize: 16)),
+              SizedBox(height: 10),
+              Text(_city, style: TextStyle(fontSize: 16)),
+              // Add more widgets here for user posts and other info
+            ],
+          ),
         ),
       ),
     );
@@ -180,37 +183,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            if (_profileImage != null)
-              CircleAvatar(
-                backgroundImage: FileImage(_profileImage!),
-                radius: 50,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (_profileImage != null)
+                CircleAvatar(
+                  backgroundImage: FileImage(_profileImage!),
+                  radius: 50,
+                ),
+              TextButton(
+                onPressed: _pickImage,
+                child: Text("Change Profile Picture"),
               ),
-            TextButton(
-              onPressed: _pickImage,
-              child: Text("Change Profile Picture"),
-            ),
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: "Username"),
-            ),
-            TextField(
-              controller: _bioController,
-              decoration: InputDecoration(labelText: "Bio"),
-            ),
-            TextField(
-              controller: _cityController,
-              decoration: InputDecoration(labelText: "City"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                await _uploadImage();
-                Navigator.pop(context);
-              },
-              child: Text("Save Changes"),
-            ),
-          ],
+              TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(labelText: "Username"),
+              ),
+              TextField(
+                controller: _bioController,
+                decoration: InputDecoration(labelText: "Bio"),
+              ),
+              TextField(
+                controller: _cityController,
+                decoration: InputDecoration(labelText: "City"),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await _uploadImage();
+                  Navigator.pop(context);
+                },
+                child: Text("Save Changes"),
+              ),
+            ],
+          ),
         ),
       ),
     );
