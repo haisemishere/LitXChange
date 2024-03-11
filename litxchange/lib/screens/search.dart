@@ -99,7 +99,7 @@ class _SearchPageState extends State<SearchPage> {
                   onPressed: _performSearch,
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xFF457a8b),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
