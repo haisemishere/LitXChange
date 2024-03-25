@@ -250,8 +250,10 @@ class _AddPageState extends State<AddPage> {
         await uploadTask;
         imageUrl = await storageRef.getDownloadURL();
       }
+      String postId = FirebaseFirestore.instance.collection('posts').doc().id;
 
       await FirebaseFirestore.instance.collection('posts').add({
+        'postId':postId,
         'userId': FirebaseAuth.instance.currentUser!.uid,
         'bookName': bookName,
         'authorName': authorName,

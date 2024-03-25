@@ -57,6 +57,7 @@ class HomePage extends StatelessWidget {
             itemBuilder: (context, index) {
               var post = posts[index];
               var date = post['date'].toDate();
+              var postId=post['postId'];
               var formattedDate = DateFormat.yMMMMd().format(date);
               return FutureBuilder(
                 future: _fetchUsername(post['userId']), // Fetch username
@@ -121,7 +122,7 @@ class HomePage extends StatelessWidget {
                                   IconButton(
                                     icon: Icon(Icons.swap_horiz),
                                     onPressed: () {
-                                      // Handle more options button press for this post
+                                      sendReq(context,postId);
                                     },
                                   ),
                                 ],
@@ -139,6 +140,7 @@ class HomePage extends StatelessWidget {
         },
       ),
     );
+
   }
 
   Future<String> _fetchUsername(String userId) async {
@@ -153,4 +155,53 @@ class HomePage extends StatelessWidget {
       return 'Unknown User';
     }
   }
+
+  void sendReq(BuildContext context, String postId) async {
+    try {
+      String userId = FirebaseAuth.instance.currentUser!.uid;
+      String notificationId = FirebaseFirestore.instance.collection('notifications').doc().id; // Generate unique ID for notification
+      await FirebaseFirestore.instance.collection('notifications').add({
+        'userId': userId,
+        'postId': postId,
+        'notificationId': notificationId,
+        'timestamp': DateTime.now(),
+      });
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Request Successful'),
+          content: Text('Request sent successfully'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } catch (error) {
+      print('Error saving notification: $error');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Request Failed'),
+          content: Text('Unable to send request. Error: $error'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+
+
 }
