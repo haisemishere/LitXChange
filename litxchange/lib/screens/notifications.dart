@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '/screens/viewrequest.dart';
 
 class NotificationsPage extends StatelessWidget {
   @override
@@ -30,7 +31,12 @@ class NotificationsPage extends StatelessWidget {
                         subtitle: Text('Fetching book name...'),
                         trailing: ElevatedButton(
                           onPressed: () {
-                            // Handle view button press
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewProfilePage(userId:document['userId']),
+                              ),
+                            );
                           },
                           child: Text('View'),
                         ),
@@ -41,7 +47,12 @@ class NotificationsPage extends StatelessWidget {
                         subtitle: Text('Error fetching book name: ${bookSnapshot.error}'),
                         trailing: ElevatedButton(
                           onPressed: () {
-                            // Handle view button press
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewProfilePage(userId: document['userId']),
+                              ),
+                            );
                           },
                           child: Text('View'),
                         ),
@@ -63,7 +74,12 @@ class NotificationsPage extends StatelessWidget {
                         ),
                         trailing: ElevatedButton(
                           onPressed: () {
-                            // Handle view button press
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewProfilePage(userId: document['userId']),
+                              ),
+                            );
                           },
                           child: Text('View'),
                         ),
