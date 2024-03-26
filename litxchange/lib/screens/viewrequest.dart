@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import '/screens/notifications.dart';
 
 class ViewProfilePage extends StatefulWidget {
   final String userId;
+  final String notificationId;
 
-  const ViewProfilePage({required this.userId});
+  const ViewProfilePage({required this.userId, required this.notificationId});
 
   @override
   _ViewProfilePageState createState() => _ViewProfilePageState();
@@ -29,7 +31,59 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       appBar: AppBar(
         title: Text('View Profile'),
       ),
-      body: _buildUserPosts(),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Reject Request"),
+                    content: Text(
+                        "Are you sure you want to reject this request?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(
+                              context); // Close the dialog
+                        },
+                        child: Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          try {
+                            print(widget.notificationId);
+                            await FirebaseFirestore.instance
+                                .collection('notifications')
+                                .doc(widget.notificationId)
+                                .delete();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NotificationsPage(),
+                              ),
+                            );
+                          } catch (error) {
+                            print("Error deleting notification: $error");
+                            // Handle error if needed
+                          }
+                        },
+
+                        child: Text("Reject"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Text('Reject'),
+          ),
+          Expanded(
+            child: _buildUserPosts(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -59,6 +113,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
             var post = posts[index];
             var date = post['date'].toDate();
             var formattedDate = DateFormat.yMMMMd().format(date);
+            String bookCondition =
+                post['condition'] ?? 'Unknown Condition';
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Card(
@@ -71,13 +127,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        formattedDate,
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ),
                     ListTile(
                       title: Text(
@@ -86,7 +135,13 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(post['genre']),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Condition: $bookCondition'),
+                          Text(post['genre']),
+                        ],
+                      ),
                     ),
                     post['imageUrl'] != null
                         ? Image.network(
@@ -101,15 +156,41 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Posted by: ${post['userId']}',
+                            formattedDate,
+                            textAlign: TextAlign.right,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.swap_horiz),
+                            icon: Icon(Icons.check_circle), // Use the check_box_outline_blank icon
                             onPressed: () {
-                              // Handle more options button press for this post
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Accept Swap Request"),
+                                    content: Text(
+                                        "Are you sure you want to select this book for swapping?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(
+                                              context); // Close the dialog
+                                        },
+                                        child: Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.pop(
+                                              context); // Close the dialog
+                                        },
+                                        child: Text("Swap"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
                         ],

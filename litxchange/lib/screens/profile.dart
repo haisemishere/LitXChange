@@ -199,6 +199,8 @@ class _ProfilePageState extends State<ProfilePage> {
             var date = post['date'].toDate();
             var formattedDate = DateFormat.yMMMMd().format(date);
             String authorName = post['authorName'] ?? 'Unknown Author';
+            String bookCondition =
+                post['condition'] ?? 'Unknown Condition';
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Card(
@@ -219,7 +221,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(post['genre']),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Condition: $bookCondition'),
+                          Text(post['genre']),
+                        ],
+                      ),
                     ),
                     post['imageUrl'] != null
                         ? Image.network(

@@ -34,7 +34,7 @@ class NotificationsPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ViewProfilePage(userId:document['userId']),
+                                builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId']),
                               ),
                             );
                           },
@@ -50,7 +50,7 @@ class NotificationsPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ViewProfilePage(userId: document['userId']),
+                                builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId']),
                               ),
                             );
                           },
@@ -77,7 +77,7 @@ class NotificationsPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ViewProfilePage(userId: document['userId']),
+                                builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId']),
                               ),
                             );
                           },
