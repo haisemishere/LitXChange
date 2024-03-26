@@ -198,6 +198,8 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (context, index) {
             var post = posts[index];
             var date = post['date'].toDate();
+            String bookCondition =
+                post['condition'] ?? 'Unknown Condition';
             var formattedDate = DateFormat.yMMMMd().format(date);
             return FutureBuilder(
               future: _fetchUsername(post['userId']),
@@ -239,7 +241,13 @@ class _SearchPageState extends State<SearchPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            subtitle: Text(post['genre']),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Condition: $bookCondition'),
+                                Text(post['genre']),
+                              ],
+                            ),
                           ),
                           post['imageUrl'] != null
                               ? Image.network(
