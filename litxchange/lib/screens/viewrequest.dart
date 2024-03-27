@@ -54,11 +54,15 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                         onPressed: () async {
                           try {
                             print(widget.notificationId);
-                            await FirebaseFirestore.instance
+                            QuerySnapshot notificationsSnapshot = await FirebaseFirestore.instance
                                 .collection('notifications')
-                                .doc(widget.notificationId)
-                                .delete();
-                            Navigator.pushReplacement(
+                                .where('notificationId', isEqualTo: widget.notificationId)
+                                .get();
+
+                            for (DocumentSnapshot doc in notificationsSnapshot.docs) {
+                              await doc.reference.delete();
+                            }
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => NotificationsPage(),
