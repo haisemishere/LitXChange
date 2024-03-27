@@ -53,71 +53,12 @@ class _LoginState extends State<Login> {
         child: Container(
           child: Column(
             children: <Widget>[
-              Container(
-                height: 400,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/background.png'),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      left: 30,
-                      width: 80,
-                      height: 200,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/light-1.png'),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 140,
-                      width: 80,
-                      height: 150,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/light-2.png'),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 40,
-                      top: 40,
-                      width: 80,
-                      height: 150,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/clock.png'),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      child: Container(
-                        margin: EdgeInsets.only(top: 50),
-                        child: Center(
-                          child: Text(
-                            "Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              Image.asset(
+                'assets/images/logo.png'
+                    , // Adjust the asset path as per your project structure
+                width: 1100, // Adjust width as needed
+                height: 300, // Adjust height as needed
+              ) ,
               Padding(
                 padding: EdgeInsets.all(30.0),
                 child: Column(
@@ -128,11 +69,11 @@ class _LoginState extends State<Login> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: Color.fromRGBO(143, 148, 251, 1),
+                          color:  Color.fromRGBO(173, 216, 230, 1),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromRGBO(143, 148, 251, .2),
+                            color:  Color.fromRGBO(173, 216, 230, 1),
                             blurRadius: 20.0,
                             offset: Offset(0, 10),
                           ),
@@ -147,7 +88,7 @@ class _LoginState extends State<Login> {
                               decoration: BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
-                                    color: Color.fromRGBO(143, 148, 251, 1),
+                                    color:  Color.fromRGBO(173, 216, 230, 1),
                                   ),
                                 ),
                               ),
@@ -193,15 +134,22 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(10),
                         gradient: LinearGradient(
                           colors: [
-                            Color.fromRGBO(143, 148, 251, 1),
-                            Color.fromRGBO(143, 148, 251, .6),
+                            Color.fromRGBO(69, 122, 139, 1.0),
+                            Color.fromRGBO(69, 122, 139, 1.0),
                           ],
                         ),
                       ),
                       child: ElevatedButton(
                         onPressed: _loginUser,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF457a8b)), // Set background color to blue
+                          foregroundColor:  MaterialStateProperty.all<Color>(Color.fromRGBO(255, 255, 255, 1.0)
+                          ), // Add other desired styling properties here
+                        ),
                         child: const Text('Login'),
                       ),
+
+
                     ),
                     SizedBox(height: 70),
 
