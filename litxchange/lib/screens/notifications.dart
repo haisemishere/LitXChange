@@ -143,14 +143,22 @@ class NotificationsPage extends StatelessWidget {
 
   Future<String> _fetchBookName(String postId) async {
     try {
-      DocumentSnapshot postDoc = await FirebaseFirestore.instance
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('posts')
-          .doc(postId)
+          .where('postId', isEqualTo: postId)
+          .limit(1)
           .get();
-
-      if (postDoc.exists) {
-        return postDoc['bookName'] ?? 'Unknown Book';
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot postDoc = querySnapshot.docs.first;
+        if (postDoc.exists && postDoc.data() != null) {
+          String bookName = postDoc['bookName'];
+          return bookName ?? 'Unknown Book';
+        } else {
+          print('Document does not have bookName field');
+          return 'Unknown Book';
+        }
       } else {
+        print('No document found with postId: $postId');
         return 'Unknown Book';
       }
     } catch (error) {
