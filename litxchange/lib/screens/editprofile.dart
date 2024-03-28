@@ -1,19 +1,16 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:litxchange/screens/login.dart';
 import 'package:litxchange/screens/profile.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class EditProfilePage extends StatefulWidget {
   final String currentUsername;
   final String currentBio;
   final String currentCity;
   final String profilePictureUrl;
-  final Function(String, String, String, String) onUpdate;
   final String userEmail;
 
   const EditProfilePage({
@@ -21,10 +18,9 @@ class EditProfilePage extends StatefulWidget {
     required this.currentUsername,
     required this.currentBio,
     required this.currentCity,
-    required this.onUpdate,
     required this.userEmail,
-    required this.profilePictureUrl,// Pass user email to EditProfilePage
-  }): super(key: key);
+    required this.profilePictureUrl,
+  }) : super(key: key);
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -34,27 +30,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _usernameController;
   late TextEditingController _bioController;
   late TextEditingController _cityController;
-  String _userEmail = '';
   File? _profileImage;
   final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
-    _fetchUserEmail();
     super.initState();
     _usernameController =
         TextEditingController(text: widget.currentUsername);
     _bioController = TextEditingController(text: widget.currentBio);
     _cityController = TextEditingController(text: widget.currentCity);
-  }
-
-  Future<void> _fetchUserEmail() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      setState(() {
-        _userEmail = user.email ?? '';
-      });
-    }
   }
 
   Future<void> _pickImage() async {
@@ -66,18 +51,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> _uploadImage() async {
-    if (_profileImage != null) {
-      String fileName = 'profile_${widget.currentUsername}_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final firebaseStorageRef = FirebaseStorage.instance.ref().child('profile_images/$fileName');
-      await firebaseStorageRef.putFile(_profileImage!);
-      final downloadUrl = await firebaseStorageRef.getDownloadURL();
-      widget.onUpdate(_usernameController.text, _bioController.text, _cityController.text, downloadUrl);
-    } else {
-      widget.onUpdate(_usernameController.text, _bioController.text, _cityController.text, widget.profilePictureUrl);
+  Future<void> _uploadProfile() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      final userId = user!.uid; // Get user UID
+
+      // Upload profile picture to Firebase Storage if a new one is selected
+      String imageUrl = widget.profilePictureUrl; // Default to existing URL
+      if (_profileImage != null) {
+        final storageRef =
+        FirebaseStorage.instance.ref().child('profile_pictures/$userId.png');
+        final uploadTask = storageRef.putFile(_profileImage!);
+        imageUrl = await uploadTask.then((snapshot) async {
+          return await snapshot.ref.getDownloadURL();
+        });
+      }
+
+      // Update profile data in Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update({
+        'userName': _usernameController.text.trim(),
+        'bio': _bioController.text.trim(),
+        'city': _cityController.text.trim(),
+        'profilePictureUrl': imageUrl,
+      });
+    } catch (error) {
+      print('Error uploading profile: $error');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +103,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               child: Text("Change Profile Picture"),
             ),
             Text(
-              'Email: $_userEmail',
+              'Email: ${widget.userEmail}',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
@@ -135,9 +138,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () async{
-                await _uploadImage();
-                Navigator.pop(context);
+              onPressed: () async {
+                await _uploadProfile();
+                Navigator.pop(context); // Redirect back to the profile page
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,

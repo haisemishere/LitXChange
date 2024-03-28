@@ -82,16 +82,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     currentBio: _bio,
                     currentCity: _city,
                     profilePictureUrl: _profilePictureUrl,
-                    onUpdate: (newUsername, newBio, newCity, newProfilePictureUrl) async {
-                      setState(() {
-                        _username = newUsername;
-                        _bio = newBio;
-                        _city = newCity;
-                        _profilePictureUrl = newProfilePictureUrl;
-                      });
-                      await _saveUserData();
-                      Navigator.pop(context); // Go back to profile page after saving
-                    },
                     userEmail: _userEmail, // Pass user email to EditProfilePage
                   ),
                 ),
@@ -300,6 +290,7 @@ class _ProfilePageState extends State<ProfilePage> {
       _username = newUsername;
       _bio = newBio;
       _city = newCity;
+
     });
     await _saveUserData();
   }
@@ -310,6 +301,7 @@ class _ProfilePageState extends State<ProfilePage> {
         'username': _username,
         'bio': _bio,
         'city': _city,
+        'profilePictureUrl':_profilePictureUrl
       });
       print('User data saved successfully');
     } catch (error) {
