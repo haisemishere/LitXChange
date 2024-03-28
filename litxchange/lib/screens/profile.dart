@@ -10,14 +10,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MaterialApp(
-    home: ProfilePage(),
+    home: ProfilePage(userId: 'placeholder_user_id'),
   ));
 }
 
 class ProfilePage extends StatefulWidget {
+  final String userId; // Add userId parameter
+
+  const ProfilePage({Key? key, required this.userId}) : super(key: key);
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
+
 class _ProfilePageState extends State<ProfilePage> {
   late FirebaseFirestore _firestore;
   late String _userId;
@@ -73,8 +77,8 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditProfilePage(
@@ -86,12 +90,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               );
+              // Fetch updated user data after returning from edit profile page
+              _fetchUserData();
             },
           ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              Navigator.push(
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => Login(),
@@ -108,10 +115,9 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 20),
             Center(
               child: CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(_profilePictureUrl),
-                backgroundColor: Colors.transparent
-              ),
+                  radius: 50,
+                  backgroundImage: NetworkImage(_profilePictureUrl),
+                  backgroundColor: Colors.transparent),
             ),
             SizedBox(height: 20),
             Center(
@@ -187,8 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
             var date = post['date'].toDate();
             var formattedDate = DateFormat.yMMMMd().format(date);
             String authorName = post['authorName'] ?? 'Unknown Author';
-            String bookCondition =
-                post['condition'] ?? 'Unknown Condition';
+            String bookCondition = post['condition'] ?? 'Unknown Condition';
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Card(
@@ -284,29 +289,4 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
-
-  Future<void> _updateUserData(String newUsername, String newBio, String newCity) async {
-    setState(() {
-      _username = newUsername;
-      _bio = newBio;
-      _city = newCity;
-
-    });
-    await _saveUserData();
-  }
-
-  Future<void> _saveUserData() async {
-    try {
-      await _firestore.collection('users').doc(_userId).set({
-        'username': _username,
-        'bio': _bio,
-        'city': _city,
-        'profilePictureUrl':_profilePictureUrl
-      });
-      print('User data saved successfully');
-    } catch (error) {
-      print('Error saving user data: $error');
-    }
-  }
 }
-

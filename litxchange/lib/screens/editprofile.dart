@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:litxchange/screens/profile.dart';
+import 'package:litxchange/screens/master.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -139,8 +139,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
+                final user = FirebaseAuth.instance.currentUser;
+                final userId = user!.uid;
                 await _uploadProfile();
-                Navigator.pop(context); // Redirect back to the profile page
+                Navigator.pop(context); // Pop the EditProfilePage
+                Navigator.pushReplacement( // Replace the current route with the Home widget
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Home(userId: userId), // Pass the updated user ID
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,

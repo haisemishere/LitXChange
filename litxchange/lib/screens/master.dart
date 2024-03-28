@@ -21,7 +21,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   late List<Widget> _widgetOptions;
-
   late String _profilePictureUrl="";
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -33,7 +32,7 @@ class _HomeState extends State<Home> {
       SearchPage(),
       AddPage(),
       NotificationsPage(),
-      ProfilePage(),
+      ProfilePage(userId: widget.userId), // Pass userId to ProfilePage
     ];
     _fetchProfilePictureUrl();
   }
