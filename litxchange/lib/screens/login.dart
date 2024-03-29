@@ -56,11 +56,41 @@ class _LoginState extends State<Login> {
               Image.asset(
                 'assets/images/logo.png'
                     , // Adjust the asset path as per your project structure
-                width: 1100, // Adjust width as needed
-                height: 300, // Adjust height as needed
+                width: 800, // Adjust width as needed
+                height: 250, // Adjust height as needed
               ) ,
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                margin: EdgeInsets.only(top: 0), // Adjust the top margin as needed
+                child: Center(
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                      color: Color.fromRGBO(69, 122, 139, 1.0),
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Times New Roman', // Set font family to Times New Roman
+                      letterSpacing: 1.5, // Optional: Adjust letter spacing
+                      shadows: [
+                        Shadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          offset: Offset(2, 2),
+                          blurRadius: 3,
+                        ),
+                      ], // Optional: Add text shadow
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+
+
               Padding(
-                padding: EdgeInsets.all(30.0),
+                padding: EdgeInsets.all(40.0),
                 child: Column(
                   children: <Widget>[
                     Container(

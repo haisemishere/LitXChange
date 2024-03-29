@@ -80,64 +80,39 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           child: Container(
             child: Column(
               children: <Widget>[
-                Container(
-                  height: 400,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/background.png'),
-                      fit: BoxFit.fill,
+            Image.asset(
+            'assets/images/logo.png'
+              , // Adjust the asset path as per your project structure
+              width: 800, // Adjust width as needed
+              height: 250, // Adjust height as needed
+            ) ,
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  margin: EdgeInsets.only(top: 0), // Adjust the top margin as needed
+                  child: Center(
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        color: Color.fromRGBO(69, 122, 139, 1.0),
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Times New Roman', // Set font family to Times New Roman
+                        letterSpacing: 1.5, // Optional: Adjust letter spacing
+                        shadows: [
+                          Shadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            offset: Offset(2, 2),
+                            blurRadius: 3,
+                          ),
+                        ], // Optional: Add text shadow
+                      ),
                     ),
                   ),
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        left: 30,
-                        width: 80,
-                        height: 200,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage('assets/images/light-1.png')
-                              )
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 140,
-                        width: 80,
-                        height: 150,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage('assets/images/light-2.png')
-                              )
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 40,
-                        top: 40,
-                        width: 80,
-                        height: 150,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage('assets/images/clock.png')
-                              )
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        child: Container(
-                          margin: EdgeInsets.only(top: 50),
-                          child: Center(
-                            child: Text("SignUp", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
                 ),
+              ),
                 Padding(
                   padding: EdgeInsets.all(30.0),
                   child: Column(
@@ -147,10 +122,10 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Color.fromRGBO(143, 148, 251, 1)),
+                            border: Border.all(color:  Color.fromRGBO(173, 216, 230, 1)),
                             boxShadow: [
                               BoxShadow(
-                                  color: Color.fromRGBO(143, 148, 251, .2),
+                                  color:  Color.fromRGBO(173, 216, 230, 1),
                                   blurRadius: 20.0,
                                   offset: Offset(0, 10)
                               )
@@ -163,7 +138,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                               Container(
                                 padding: EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
-                                    border: Border(bottom: BorderSide(color:  Color.fromRGBO(143, 148, 251, 1)))
+                                    border: Border(bottom: BorderSide(color:   Color.fromRGBO(173, 216, 230, 1)))
                                 ),
                                 child: TextFormField(
                                   controller: _emailController,
@@ -213,13 +188,18 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                             borderRadius: BorderRadius.circular(10),
                             gradient: LinearGradient(
                                 colors: [
-                                  Color.fromRGBO(143, 148, 251, 1),
-                                  Color.fromRGBO(143, 148, 251, .6),
+                                  Color.fromRGBO(69, 122, 139, 1.0),
+                                  Color.fromRGBO(69, 122, 139, 1.0),
                                 ]
                             )
                         ),
                         child: ElevatedButton(
                           onPressed: _registerUser,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF457a8b)), // Set background color to blue
+                            foregroundColor:  MaterialStateProperty.all<Color>(Color.fromRGBO(255, 255, 255, 1.0)
+                            ), // Add other desired styling properties here
+                          ),
                           child: const Text('Sign Up'),
                         ),
                       ),
