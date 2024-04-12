@@ -2,6 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '/screens/notifications.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+class GoogleAuthApi
+{
+  static final _googleSignIn=GoogleSignIn();
+  static  Future<GoogleSignInAccount?> signIn() async {
+    if (await _googleSignIn.isSignedIn()) {
+      return _googleSignIn.currentUser;
+    } else {
+      return await _googleSignIn.signIn();
+    }
+  }
+}
 
 class ViewProfilePage extends StatefulWidget {
   final String userId;
@@ -186,8 +201,10 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                       ),
                                       TextButton(
                                         onPressed: () async {
+                                          await sendemail();
                                           Navigator.pop(
-                                              context); // Close the dialog
+                                              context);
+                                          // Close the dialog
                                         },
                                         child: Text("Swap"),
                                       ),
@@ -209,4 +226,28 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       },
     );
   }
+  Future sendemail() async{
+    final user=await GoogleAuthApi.signIn();
+    if (user==null) return;
+    final email='ridaamirbashir@gmail.com';
+    final auth = await user.authentication;
+    final token=auth.accessToken!;
+    print('Authenticated: $email');
+    final smtpServer=gmailSaslXoauth2(email, token);
+    final message=Message()
+    ..from=Address(email,'Rida')
+    ..recipients=['ridaamairbashir@gmail.com']
+    ..subject='Swap Request Accepted'
+    ..text='This is test email';
+
+    try {
+      await send(message,smtpServer);
+      print('email sent');
+    }
+    on MailerException catch(e){
+        print(e);
+    }
+  }
+
 }
+
