@@ -21,74 +21,17 @@ class NotificationsPage extends StatelessWidget {
           } else if (snapshot.hasData && snapshot.data!.isEmpty) {
             return Center(child: Text('No notifications yet'));
           } else {
-            return ListView(
-              children: snapshot.data!.map((document) {
-                return FutureBuilder<String>(
-                  future: _fetchBookName(document['postId']),
-                  builder: (context, bookSnapshot) {
-                    if (bookSnapshot.connectionState == ConnectionState.waiting) {
-                      return ListTile(
-                        title: Text('Notification for post: ${document['postId']}'),
-                        subtitle: Text('Fetching book name...'),
-                        trailing: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId']),
-                              ),
-                            );
-                          },
-                          child: Text('View'),
-                        ),
-                      );
-                    } else if (bookSnapshot.hasError) {
-                      return ListTile(
-                        title: Text('Notification for post: ${document['postId']}'),
-                        subtitle: Text('Error fetching book name: ${bookSnapshot.error}'),
-                        trailing: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId']),
-                              ),
-                            );
-                          },
-                          child: Text('View'),
-                        ),
-                      );
-                    } else {
-                      return ListTile(
-                        title: Text('Notification for book: ${bookSnapshot.data}'),
-                        subtitle: FutureBuilder<String>(
-                          future: _fetchUsername(document['userId']),
-                          builder: (context, userSnapshot) {
-                            if (userSnapshot.connectionState == ConnectionState.waiting) {
-                              return Text('User ID: ${document['userId']}');
-                            } else if (userSnapshot.hasError) {
-                              return Text('Error: ${userSnapshot.error}');
-                            } else {
-                              return Text('Username: ${userSnapshot.data}');
-                            }
-                          },
-                        ),
-                        trailing: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId']),
-                              ),
-                            );
-                          },
-                          child: Text('View'),
-                        ),
-                      );
-                    }
-                  },
-                );
-              }).toList(),
+            return FutureBuilder<List<Widget>>(
+              future: _buildListTiles(snapshot.data!, context),
+              builder: (context, listSnapshot) {
+                if (listSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (listSnapshot.hasError) {
+                  return Center(child: Text('Error: ${listSnapshot.error}'));
+                } else {
+                  return ListView(children: listSnapshot.data!);
+                }
+              },
             );
           }
         },
@@ -98,10 +41,10 @@ class NotificationsPage extends StatelessWidget {
 
   Future<List<DocumentSnapshot>> _fetchNotifications() async {
     try {
-      List<String> userPostIds = await _fetchUserPostIds(); // Fetch user's post IDs
+      List<String> userPostIds = await _fetchUserPostIds();
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('notifications')
-          .where('postId', whereIn: userPostIds) // Filter notifications for user's posts
+          .where('postId', whereIn: userPostIds)
           .get();
       return snapshot.docs;
     } catch (error) {
@@ -117,7 +60,6 @@ class NotificationsPage extends StatelessWidget {
           .collection('posts')
           .where('userId', isEqualTo: userId)
           .get();
-
       List<String> postIds = [];
       for (DocumentSnapshot post in postsSnapshot.docs) {
         postIds.add(post['postId']);
@@ -168,4 +110,33 @@ class NotificationsPage extends StatelessWidget {
     }
   }
 
+  Future<List<Widget>> _buildListTiles(List<DocumentSnapshot> documents, BuildContext context) async {
+    List<Widget> listTiles = [];
+    for (var document in documents) {
+      try {
+        String bookName = await _fetchBookName(document['postId']);
+        String userName = await _fetchUsername(document['userId']);
+        listTiles.add(
+          ListTile(
+            title: Text('Notification for book: $bookName'),
+            subtitle: Text('Username: $userName'),
+            trailing: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId']),
+                  ),
+                );
+              },
+              child: Text('View'),
+            ),
+          ),
+        );
+      } catch (error) {
+        print("Error building list tile: $error");
+      }
+    }
+    return listTiles;
+  }
 }
