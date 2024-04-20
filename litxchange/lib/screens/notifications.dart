@@ -118,8 +118,8 @@ class NotificationsPage extends StatelessWidget {
         String userName = await _fetchUsername(document['userId']);
         listTiles.add(
           ListTile(
-            title: Text('Notification for book: $bookName'),
-            subtitle: Text('Username: $userName'),
+            title: Text('Swap Request from $userName'),
+            subtitle: Text('for $bookName'),
             trailing: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -129,7 +129,20 @@ class NotificationsPage extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('View'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Color(0xFF457a8b),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 3,
+              ),
+              child: Text(
+                'View',
+                style: TextStyle(fontSize: 16),
+              ),
+
             ),
           ),
         );

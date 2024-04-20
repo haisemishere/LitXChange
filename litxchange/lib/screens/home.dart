@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
             );
           }
           final posts = snapshot.data!.docs;
-          return ListView.builder(
+          return ListView.builder(// Set the background color
             itemCount: posts.length,
             itemBuilder: (context, index) {
               var post = posts[index];
@@ -46,9 +46,7 @@ class HomePage extends StatelessWidget {
                 future: _fetchUsername(post['userId']),
                 builder: (context, AsyncSnapshot<String> usernameSnapshot) {
                   if (usernameSnapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return CircularProgressIndicator();
                   } else if (usernameSnapshot.hasError) {
                     return Center(
                       child: Text('Error: ${usernameSnapshot.error}'),

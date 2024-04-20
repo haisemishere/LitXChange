@@ -18,11 +18,12 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController _searchController = TextEditingController();
   late Stream<QuerySnapshot> _searchStream;
   SearchOption _searchOption = SearchOption.BookName;
+  final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void initState() {
     super.initState();
-    _searchStream = FirebaseFirestore.instance.collection('posts').snapshots();
+    _searchStream = FirebaseFirestore.instance.collection('posts').where('userId', isNotEqualTo: currentUserUid).snapshots();
   }
 
   Future<String> _fetchUserid(String userName) async {
@@ -66,9 +67,10 @@ class _SearchPageState extends State<SearchPage> {
       _searchStream = FirebaseFirestore.instance
           .collection('posts')
           .where(fieldName, isEqualTo: searchText)
+          .where('userId', isNotEqualTo: currentUserUid)
           .snapshots();
     } else {
-      _searchStream = FirebaseFirestore.instance.collection('posts').snapshots();
+      _searchStream = FirebaseFirestore.instance.collection('posts').where('userId', isNotEqualTo: currentUserUid).snapshots();
     }
     setState(() {});
   }
