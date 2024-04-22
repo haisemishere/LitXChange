@@ -88,7 +88,13 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
       }
 
       // Navigate to Home page with user ID parameter
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home(userId: userId)));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home(userId: userId, idx: 0),
+        ),
+      );
+
     } catch (error) {
       print('Error creating/updating profile: $error');
       // Show error dialog

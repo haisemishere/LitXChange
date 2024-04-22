@@ -23,7 +23,13 @@ class _LoginState extends State<Login> {
         String password = _passwordController.text.trim();
         UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
         // If login successful, navigate to Home with user ID
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home(userId: userCredential.user!.uid)));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Home(userId: userCredential.user!.uid, idx: 0),
+          ),
+        );
+
       } on FirebaseAuthException catch (ex) {
         // Display error message for invalid credentials
         showDialog(

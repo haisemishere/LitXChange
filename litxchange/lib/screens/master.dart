@@ -11,17 +11,16 @@ import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   final String userId;
-
-  const Home({Key? key, required this.userId}) : super(key: key);
+  final int idx;
+  const Home({Key? key, required this.userId, required this.idx}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
-
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   late List<Widget> _widgetOptions;
-  late String _profilePictureUrl="";
+  late String _profilePictureUrl = "";
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
@@ -32,8 +31,14 @@ class _HomeState extends State<Home> {
       SearchPage(),
       AddPage(),
       NotificationsPage(),
-      ProfilePage(userId: widget.userId), // Pass userId to ProfilePage
+      ProfilePage(userId: widget.userId),
     ];
+
+    // Check if an index is passed and set the selected index accordingly
+    if (widget.idx != null && widget.idx >= 0 && widget.idx < _widgetOptions.length) {
+      _selectedIndex = widget.idx;
+    }
+
     _fetchProfilePictureUrl();
   }
 

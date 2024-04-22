@@ -146,7 +146,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Navigator.pushReplacement( // Replace the current route with the Home widget
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Home(userId: userId), // Pass the updated user ID
+                    builder: (context) => Home(userId: userId, idx: 4),
                   ),
                 );
               },
