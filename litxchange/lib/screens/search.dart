@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -17,11 +18,12 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController _searchController = TextEditingController();
   late Stream<QuerySnapshot> _searchStream;
   SearchOption _searchOption = SearchOption.BookName;
+  final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void initState() {
     super.initState();
-    _searchStream = FirebaseFirestore.instance.collection('posts').snapshots();
+    _searchStream = FirebaseFirestore.instance.collection('posts').where('userId', isNotEqualTo: currentUserUid).snapshots();
   }
 
   Future<String> _fetchUserid(String userName) async {
@@ -65,9 +67,10 @@ class _SearchPageState extends State<SearchPage> {
       _searchStream = FirebaseFirestore.instance
           .collection('posts')
           .where(fieldName, isEqualTo: searchText)
+          .where('userId', isNotEqualTo: currentUserUid)
           .snapshots();
     } else {
-      _searchStream = FirebaseFirestore.instance.collection('posts').snapshots();
+      _searchStream = FirebaseFirestore.instance.collection('posts').where('userId', isNotEqualTo: currentUserUid).snapshots();
     }
     setState(() {});
   }
@@ -270,7 +273,7 @@ class _SearchPageState extends State<SearchPage> {
                                 IconButton(
                                   icon: Icon(Icons.swap_horiz),
                                   onPressed: () {
-                                    // Handle more options button press for this post
+                                    sendReq(context, post['postId']);
                                   },
                                 ),
                               ],
@@ -289,3 +292,53 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+
+void sendReq(BuildContext context,
+    String postId) async {
+  try {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    String notificationId =
+        FirebaseFirestore.instance.collection('notifications').doc().id;
+    // Generate unique ID for notification
+    await FirebaseFirestore.instance.collection('notifications').add({
+      'userId': userId,
+      'postId': postId,
+      'notificationId': notificationId,
+      'timestamp': DateTime.now(),
+    });
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Request Successful'),
+        content: Text('Request sent successfully'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  } catch (error) {
+    print('Error saving notification: $error');
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Request Failed'),
+        content: Text('Unable to send request. Error: $error'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

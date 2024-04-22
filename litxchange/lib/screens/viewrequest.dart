@@ -50,56 +50,75 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       ),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Reject Request"),
-                    content: Text(
-                        "Are you sure you want to reject this request?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(
-                              context); // Close the dialog
-                        },
-                        child: Text("Cancel"),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          try {
-                            print(widget.notificationId);
-                            QuerySnapshot notificationsSnapshot = await FirebaseFirestore.instance
-                                .collection('notifications')
-                                .where('notificationId', isEqualTo: widget.notificationId)
-                                .get();
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Reject Request"),
+                        content: Text("Are you sure you want to reject this request?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close the dialog
+                            },
+                            child: Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              try {
+                                print(widget.notificationId);
+                                QuerySnapshot notificationsSnapshot =
+                                await FirebaseFirestore.instance
+                                    .collection('notifications')
+                                    .where('notificationId',
+                                    isEqualTo: widget.notificationId)
+                                    .get();
 
-                            for (DocumentSnapshot doc in notificationsSnapshot.docs) {
-                              await doc.reference.delete();
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NotificationsPage(),
-                              ),
-                            );
-                          } catch (error) {
-                            print("Error deleting notification: $error");
-                            // Handle error if needed
-                          }
-                        },
-
-                        child: Text("Reject"),
-                      ),
-                    ],
+                                for (DocumentSnapshot doc
+                                in notificationsSnapshot.docs) {
+                                  await doc.reference.delete();
+                                }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NotificationsPage(),
+                                  ),
+                                );
+                              } catch (error) {
+                                print("Error deleting notification: $error");
+                                // Handle error if needed
+                              }
+                            },
+                            child: Text("Reject"),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
-              );
-            },
-            child: Text('Reject'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Color(0xFF457a8b),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 3,
+                ),
+                child: Text(
+                  'Reject',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
           ),
+
           Expanded(
             child: _buildUserPosts(),
           ),
