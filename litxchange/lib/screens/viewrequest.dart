@@ -24,8 +24,10 @@ class GoogleAuthApi
 class ViewProfilePage extends StatefulWidget {
   final String userId;
   final String notificationId;
+  final String postId;
+  final String bookName;
 
-  const ViewProfilePage({required this.userId, required this.notificationId});
+  const ViewProfilePage({required this.userId, required this.notificationId, required this.bookName, required this.postId});
 
   @override
   _ViewProfilePageState createState() => _ViewProfilePageState();
@@ -50,77 +52,92 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
         title: Text('View Profile'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Reject Request"),
-                        content: Text("Are you sure you want to reject this request?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context); // Close the dialog
-                            },
-                            child: Text("Cancel"),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              try {
-                                print(widget.notificationId);
-                                QuerySnapshot notificationsSnapshot =
-                                await FirebaseFirestore.instance
-                                    .collection('notifications')
-                                    .where('notificationId',
-                                    isEqualTo: widget.notificationId)
-                                    .get();
-
-                                for (DocumentSnapshot doc
-                                in notificationsSnapshot.docs) {
-                                  await doc.reference.delete();
-                                }
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Home(userId: (FirebaseAuth.instance.currentUser)!.uid, idx: 3),
-                                  ),
-                                );
-                              } catch (error) {
-                                print("Error deleting notification: $error");
-                                // Handle error if needed
-                              }
-                            },
-                            child: Text("Reject"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF457a8b),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Swap Request for '${widget.bookName}'",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                  elevation: 3,
                 ),
-                child: Text(
-                  'Reject',
-                  style: TextStyle(fontSize: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Reject Request"),
+                          content: Text(
+                              "Are you sure you want to reject this request?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // Close the dialog
+                              },
+                              child: Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                try {
+                                  QuerySnapshot notificationsSnapshot =
+                                  await FirebaseFirestore.instance
+                                      .collection('notifications')
+                                      .where('notificationId',
+                                      isEqualTo: widget.notificationId)
+                                      .get();
+
+                                  for (DocumentSnapshot doc
+                                  in notificationsSnapshot.docs) {
+                                    await doc.reference.delete();
+                                  }
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          Home(userId: (FirebaseAuth.instance
+                                              .currentUser)!
+                                              .uid,
+                                              idx: 3),
+                                    ),
+                                  );
+                                } catch (error) {
+                                  print(
+                                      "Error deleting notification: $error");
+                                  // Handle error if needed
+                                }
+                              },
+                              child: Text("Reject"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color(0xFF457a8b),
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 3,
+                  ),
+                  child: Text(
+                    'Reject',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-
           Expanded(
             child: _buildUserPosts(),
           ),
@@ -128,6 +145,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       ),
     );
   }
+
 
   Widget _buildUserPosts() {
     return StreamBuilder(
@@ -205,7 +223,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.check_circle), // Use the check_box_outline_blank icon
+                            icon: Icon(Icons.check_circle),
+                            // Use the check_box_outline_blank icon
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -213,7 +232,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   return AlertDialog(
                                     title: Text("Accept Swap Request"),
                                     content: Text(
-                                        "Are you sure you want to select this book for swapping?"),
+                                        "Are you sure you want to select '${post['bookName']}' for swapping?"),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
@@ -224,9 +243,51 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                       ),
                                       TextButton(
                                         onPressed: () async {
-                                          await sendemail();
-                                          Navigator.pop(
-                                              context);
+
+                                          await sendemail(widget.userId,widget.bookName,post['bookName']);
+
+                                          QuerySnapshot notificationsSnapshot =
+                                          await FirebaseFirestore.instance
+                                              .collection('notifications')
+                                              .where('notificationId',
+                                              isEqualTo: widget.notificationId)
+                                              .get();
+
+                                          for (DocumentSnapshot doc
+                                          in notificationsSnapshot.docs) {
+                                            await doc.reference.delete();
+                                          }
+
+                                          QuerySnapshot recievedSnapshot =
+                                          await FirebaseFirestore.instance
+                                              .collection('posts')
+                                              .where('postId',
+                                              isEqualTo: widget.postId)
+                                              .get();
+
+                                          for (DocumentSnapshot doc
+                                          in recievedSnapshot.docs) {
+                                            await doc.reference.delete();
+                                          }
+
+                                          QuerySnapshot sentSnapshot =
+                                          await FirebaseFirestore.instance
+                                              .collection('posts')
+                                              .where('postId',
+                                              isEqualTo: post['postId'])
+                                              .get();
+
+                                          for (DocumentSnapshot doc
+                                          in sentSnapshot.docs) {
+                                            await doc.reference.delete();
+                                          }
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Home(userId: (FirebaseAuth.instance.currentUser)!.uid, idx: 3,),
+                                            ),
+                                          );
+
                                           // Close the dialog
                                         },
                                         child: Text("Swap"),
@@ -249,28 +310,60 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       },
     );
   }
-  Future sendemail() async{
-    final user=await GoogleAuthApi.signIn();
-    if (user==null) return;
-    final email='ridaamirbashir@gmail.com';
+
+  Future<String> _fetchUserEmail(String userId) async {
+    try {
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      return userData['email'] ?? 'Unknown email';
+    } catch (error) {
+      print("Error fetching email: $error");
+      return 'Unknown email';
+    }
+  }
+
+  Future<String> _fetchUsername(String userId) async {
+    try {
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      return userData['userName'] ?? 'Unknown User';
+    } catch (error) {
+      print("Error fetching username: $error");
+      return 'Unknown User';
+    }
+  }
+
+  Future sendemail(String reciverid,String bookName,String selectedbook) async {
+    String userName = await _fetchUsername(
+        (FirebaseAuth.instance.currentUser)!.uid);
+    String reciverName=await _fetchUsername(reciverid);
+    String reciever_email=await _fetchUserEmail(reciverid);
+    final user1 = FirebaseAuth.instance.currentUser;
+    String sender_email=user1!.email ?? '';
+    final user = await GoogleAuthApi.signIn();
+    if (user == null) return;
     final auth = await user.authentication;
-    final token=auth.accessToken!;
-    print('Authenticated: $email');
-    final smtpServer=gmailSaslXoauth2(email, token);
-    final message=Message()
-    ..from=Address(email,'Rida')
-    ..recipients=['ridaamairbashir@gmail.com']
-    ..subject='Swap Request Accepted'
-    ..text='This is test email';
+    final token = auth.accessToken!;
+    print('Authenticated: $sender_email');
+    final smtpServer = gmailSaslXoauth2(sender_email, token);
+    final message = Message()
+      ..from = Address(sender_email, userName)
+      ..recipients = [reciever_email]
+      ..subject = 'Swap Request Accepted'
+      ..text = 'Dear $reciverName,\n\nTeam LitXChange pleased to inform you that your swap request for book, \'$bookName\' has been accepted by $userName in return of your book, \'$selectedbook\'.\n\nTo establish further contact with $userName, please reply to this email.\n\nHappy Swapping!\n\nRegards,\nTeam LitXChange\n\nPlease note that this is a computer-generated email.';
 
     try {
       await send(message,smtpServer);
       print('email sent');
+
     }
-    on MailerException catch(e){
-        print(e);
+    on MailerException catch (e) {
+      print(e);
     }
   }
-
 }
 

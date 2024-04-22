@@ -83,7 +83,8 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
           'userName': userName,
           'city': _cityController.text.trim(),
           'bio': _bioController.text.trim(),
-          'profilePictureUrl': imageUrl, // Add profile picture URL for new profile
+          'profilePictureUrl': imageUrl,
+          'email':user.email ?? ''
         });
       }
 

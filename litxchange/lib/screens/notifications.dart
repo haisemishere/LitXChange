@@ -125,7 +125,7 @@ class NotificationsPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId']),
+                    builder: (context) => ViewProfilePage(userId: document['userId'], notificationId: document['notificationId'],bookName: bookName,postId:document['postId']),
                   ),
                 );
               },
