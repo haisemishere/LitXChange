@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import '/screens/notifications.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:litxchange/screens/master.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class GoogleAuthApi
 {
@@ -84,10 +85,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                 in notificationsSnapshot.docs) {
                                   await doc.reference.delete();
                                 }
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => NotificationsPage(),
+                                      builder: (context) => Home(userId: (FirebaseAuth.instance.currentUser)!.uid, idx: 3),
                                   ),
                                 );
                               } catch (error) {
