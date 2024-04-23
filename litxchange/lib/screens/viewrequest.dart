@@ -347,7 +347,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     GoogleSignInAccount? user = await GoogleAuthApi.signIn();
     while (user!.email!=sender_email)
     {
-        GoogleAuthApi.signOut();
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -355,18 +354,18 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
             content: Text('Please select the email account you used to register to LitXChange'),
             actions: [
               TextButton(
-                onPressed: () async{
+                onPressed: (){
                   Navigator.of(context).pop();
-                  user = await GoogleAuthApi.signIn();
                 },
                 child: Text('OK'),
               ),
             ],
           ),
         );
-
+        GoogleAuthApi.signOut();
+        user = await GoogleAuthApi.signIn();
     }
-    final auth = await user!.authentication;
+    final auth = await user.authentication;
     final token = auth.accessToken!;
     print('Authenticated: $sender_email');
     final smtpServer = gmailSaslXoauth2(sender_email, token);
