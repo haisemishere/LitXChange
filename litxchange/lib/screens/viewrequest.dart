@@ -12,10 +12,10 @@ class GoogleAuthApi
   static final _googleSignIn=GoogleSignIn(scopes: ['https://mail.google.com/']);
   static  Future<GoogleSignInAccount?> signIn() async {
     if (await _googleSignIn.isSignedIn()) {
-      return _googleSignIn.currentUser;
-    } else {
-      return await _googleSignIn.signIn();
+      _googleSignIn.signOut();
     }
+      return await _googleSignIn.signIn();
+
   }
 
   static Future signOut()=>_googleSignIn.signOut();
@@ -344,9 +344,29 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     String reciever_email=await _fetchUserEmail(reciverid);
     final user1 = FirebaseAuth.instance.currentUser;
     String sender_email=user1!.email ?? '';
-    final user = await GoogleAuthApi.signIn();
-    if (user == null) return;
-    final auth = await user.authentication;
+    GoogleSignInAccount? user = await GoogleAuthApi.signIn();
+    while (user!.email!=sender_email)
+    {
+        GoogleAuthApi.signOut();
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Invalid email selected'),
+            content: Text('Please select the email account you used to register to LitXChange'),
+            actions: [
+              TextButton(
+                onPressed: () async{
+                  Navigator.of(context).pop();
+                  user = await GoogleAuthApi.signIn();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+
+    }
+    final auth = await user!.authentication;
     final token = auth.accessToken!;
     print('Authenticated: $sender_email');
     final smtpServer = gmailSaslXoauth2(sender_email, token);
@@ -354,7 +374,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       ..from = Address(sender_email, userName)
       ..recipients = [reciever_email]
       ..subject = 'Swap Request Accepted'
-      ..text = 'Dear $reciverName,\n\nTeam LitXChange pleased to inform you that your swap request for book, \'$bookName\' has been accepted by $userName in return of your book, \'$selectedbook\'.\n\nTo establish further contact with $userName, please reply to this email.\n\nHappy Swapping!\n\nRegards,\nTeam LitXChange\n\nPlease note that this is a computer-generated email.';
+      ..text = 'Dear $reciverName,\n\nTeam LitXChange is pleased to inform you that your swap request for book, \'$bookName\' has been accepted by $userName in return of your book, \'$selectedbook\'.\n\nTo establish further contact with $userName, please reply to this email.\n\nHappy Swapping!\n\nRegards,\nTeam LitXChange\n\nPlease note that this is a computer-generated email.';
 
     try {
       await send(message,smtpServer);
