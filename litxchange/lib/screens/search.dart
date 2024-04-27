@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:litxchange/screens/master.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -268,17 +269,59 @@ class _SearchPageState extends State<SearchPage> {
                                   username,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                   ),
                                 ),
-                                IconButton(
-                                  icon: Icon(Icons.swap_horiz),
-                                  onPressed: () {
-                                    sendReq(context, post['postId']);
+                                FutureBuilder(
+                                  future: _isSwap(post['postId']),
+                                  builder: (context, AsyncSnapshot<bool> snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Offstage();
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    }
+                                    if (!snapshot.data!) {
+                                      return IconButton(
+                                        icon: Icon(Icons.swap_horiz),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              title: Text('Swap Request'),
+                                              content: Text('Are you sure you want to send a swap request?'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("Cancel"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    sendReq(context, post['postId']);
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => Home(userId: (FirebaseAuth.instance.currentUser)!.uid, idx: 0,),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text('Send'),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
+                                    return Offstage();
                                   },
                                 ),
                               ],
                             ),
                           ),
+                          SizedBox(height: 8.0),
                         ],
                       ),
                     ),
@@ -290,6 +333,28 @@ class _SearchPageState extends State<SearchPage> {
         );
       },
     );
+  }
+}
+
+Future<bool> _isSwap(String postId) async {
+  try {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('notifications')
+        .where('postId', isEqualTo: postId)
+        .where('userId', isEqualTo: userId)
+        .limit(1)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  } catch (error) {
+    print("Error fetching username: $error");
+    return false;
   }
 }
 
