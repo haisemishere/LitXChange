@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                 future: _fetchUsername(post['userId']),
                 builder: (context, AsyncSnapshot<String> usernameSnapshot) {
                   if (usernameSnapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator());
                   } else if (usernameSnapshot.hasError) {
                     return Center(
                       child: Text('Error: ${usernameSnapshot.error}'),
@@ -111,7 +111,30 @@ class HomePage extends StatelessWidget {
                                   IconButton(
                                     icon: Icon(Icons.swap_horiz),
                                     onPressed: () {
-                                      sendReq(context, post['postId']);
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text('Swap Request'),
+                                          content: Text('Are you sure you want to send swap request?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("Cancel"),
+                                            ),
+                                            TextButton(
+                                              onPressed: (){
+                                                sendReq(context, post['postId']);
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Send'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+
+
                                     },
                                   ),
                                 ],
