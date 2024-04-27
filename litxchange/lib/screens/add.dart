@@ -274,6 +274,24 @@ class _AddPageState extends State<AddPage> {
         await uploadTask;
         imageUrl = await storageRef.getDownloadURL();
       }
+      else
+        {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Post Failed'),
+                content: Text('Add an Image for this Post'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              )  );
+              return;
+        }
       String postId = FirebaseFirestore.instance.collection('posts').doc().id;
 
       await FirebaseFirestore.instance.collection('posts').add({
