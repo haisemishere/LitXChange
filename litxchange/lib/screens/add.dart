@@ -36,6 +36,8 @@ class _AddPageState extends State<AddPage> {
   String _selectedCondition = 'New'; // Default selected condition
   String _selectedGenre = 'Fiction'; // Default selected genre
   File? _image;
+  String? _bookNameError;
+  String? _authorNameError;
 
   final List<String> _conditionItems = ['New', 'Like New', 'Very Good', 'Good', 'Acceptable'];
 
@@ -127,6 +129,7 @@ class _AddPageState extends State<AddPage> {
                 decoration: InputDecoration(
                   hintText: 'Enter the book name',
                   border: OutlineInputBorder(),
+                  errorText: _bookNameError,
                 ),
               ),
               SizedBox(height: 16),
@@ -140,6 +143,7 @@ class _AddPageState extends State<AddPage> {
                 decoration: InputDecoration(
                   hintText: 'Enter the Author Name',
                   border: OutlineInputBorder(),
+                  errorText: _authorNameError,
                 ),
               ),
               SizedBox(height: 16),
@@ -243,6 +247,26 @@ class _AddPageState extends State<AddPage> {
     String genre = _selectedGenre;
     String? imageUrl;
 
+    setState(() {
+      // Reset previous error messages
+      _bookNameError = null;
+      _authorNameError = null;
+    });
+
+    if (bookName.isEmpty) {
+      setState(() {
+        _bookNameError = 'Book name cannot be empty';
+      });
+      return;
+    }
+
+    if (authorName.isEmpty) {
+      setState(() {
+        _authorNameError = 'Author name cannot be empty';
+      });
+      return;
+    }
+
     try {
       if (_image != null) {
         final storageRef = FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
@@ -250,6 +274,24 @@ class _AddPageState extends State<AddPage> {
         await uploadTask;
         imageUrl = await storageRef.getDownloadURL();
       }
+      else
+        {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Post Failed'),
+                content: Text('Add an Image for this Post'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              )  );
+              return;
+        }
       String postId = FirebaseFirestore.instance.collection('posts').doc().id;
 
       await FirebaseFirestore.instance.collection('posts').add({

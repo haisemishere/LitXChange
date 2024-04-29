@@ -32,6 +32,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _cityController;
   File? _profileImage;
   final ImagePicker _picker = ImagePicker();
+  String? _userName;
 
   @override
   void initState() {
@@ -55,6 +56,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       final userId = user!.uid; // Get user UID
+
+      setState(() {
+        // Reset previous error messages
+        _userName = null;
+      });
+
+      if ((_usernameController.text.trim()).isEmpty) {
+        setState(() {
+          _userName = 'User name cannot be empty';
+        });
+        return;
+      }
 
       // Upload profile picture to Firebase Storage if a new one is selected
       String imageUrl = widget.profilePictureUrl; // Default to existing URL
@@ -114,6 +127,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               decoration: InputDecoration(
                 hintText: 'Enter Username',
                 border: OutlineInputBorder(),
+                errorText: _userName,
               ),
             ),
             SizedBox(height: 20),
