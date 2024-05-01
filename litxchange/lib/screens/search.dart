@@ -62,13 +62,22 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     if (searchText.isNotEmpty) {
-
-      _searchStream = FirebaseFirestore.instance
-          .collection('posts')
-          .where(fieldName, isEqualTo: searchText)
-          .where('userId', isNotEqualTo: currentUserUid)
-          .snapshots();
-
+      if(fieldName=='userId'){
+        _fetchUserid(searchText).then((String userId) {
+          _searchStream = FirebaseFirestore.instance
+              .collection('posts')
+              .where('userId', isEqualTo: userId)
+              .where('userId', isNotEqualTo: currentUserUid)
+              .snapshots();
+        });
+      }
+      else {
+        _searchStream = FirebaseFirestore.instance
+            .collection('posts')
+            .where(fieldName, isEqualTo: searchText)
+            .where('userId', isNotEqualTo: currentUserUid)
+            .snapshots();
+      }
     } else {
       _searchStream = FirebaseFirestore.instance.collection('posts').where('userId', isNotEqualTo: currentUserUid).snapshots();
     }
