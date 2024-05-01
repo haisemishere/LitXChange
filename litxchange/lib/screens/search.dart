@@ -62,21 +62,13 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     if (searchText.isNotEmpty) {
-      if (fieldName == 'userId') {
-        searchText = await _fetchUserid(searchText);
-        _searchStream = FirebaseFirestore.instance
-            .collection('posts')
-            .where(fieldName, isEqualTo: searchText)
-            .where('userId', isNotEqualTo: currentUserUid)
-            .snapshots();
-      }
-      else{
+
       _searchStream = FirebaseFirestore.instance
           .collection('posts')
           .where(fieldName, isEqualTo: searchText)
-          //.where('userId', isNotEqualTo: currentUserUid)
+          .where('userId', isNotEqualTo: currentUserUid)
           .snapshots();
-      }
+
     } else {
       _searchStream = FirebaseFirestore.instance.collection('posts').where('userId', isNotEqualTo: currentUserUid).snapshots();
     }
