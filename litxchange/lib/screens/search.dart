@@ -63,13 +63,12 @@ class _SearchPageState extends State<SearchPage> {
 
     if (searchText.isNotEmpty) {
       if(fieldName=='userId'){
-        _fetchUserid(searchText).then((String userId) {
-          _searchStream = FirebaseFirestore.instance
-              .collection('posts')
-              .where('userId', isEqualTo: userId)
-              .where('userId', isNotEqualTo: currentUserUid)
-              .snapshots();
-        });
+        String userId = await _fetchUserid(searchText); // Wait for the async operation to complete
+        _searchStream = FirebaseFirestore.instance
+            .collection('posts')
+            .where('userId', isEqualTo: userId)
+            .where('userId', isNotEqualTo: currentUserUid)
+            .snapshots();
       }
       else {
         _searchStream = FirebaseFirestore.instance
