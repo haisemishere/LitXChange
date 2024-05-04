@@ -347,21 +347,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     GoogleSignInAccount? user = await GoogleAuthApi.signIn();
     while (user!.email!=sender_email)
     {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Invalid email selected'),
-            content: Text('Please select the email account you used to register to LitXChange'),
-            actions: [
-              TextButton(
-                onPressed: (){
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select the email account you used to register to LitXChange'),
+        ),
+      );
         GoogleAuthApi.signOut();
         user = await GoogleAuthApi.signIn();
     }

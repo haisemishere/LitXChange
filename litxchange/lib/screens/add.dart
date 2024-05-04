@@ -276,20 +276,11 @@ class _AddPageState extends State<AddPage> {
       }
       else
         {
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Post Failed'),
-                content: Text('Add an Image for this Post'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              )  );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Add an image for this post'),
+            ),
+          );
               return;
         }
       String postId = FirebaseFirestore.instance.collection('posts').doc().id;
@@ -305,42 +296,23 @@ class _AddPageState extends State<AddPage> {
         'imageUrl': imageUrl ?? '',
       });
 
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Post Successful'),
-          content: Text('Post Added successfully'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                _bookNameController.clear();
-                _authorNameController.clear();
-                setState(() {
-                  _selectedCondition = _conditionItems[0];
-                  _selectedGenre = _genreItems[0];
-                  _image = null;
-                });
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
+      _bookNameController.clear();
+      _authorNameController.clear();
+      setState(() {
+        _selectedCondition = _conditionItems[0];
+        _selectedGenre = _genreItems[0];
+        _image = null;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Post Added Successfully.'),
         ),
       );
     } catch (error) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Post Failed'),
-          content: Text('Unable to add this post. Error: $error'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to add post'),
         ),
       );
       print("Error adding post: $error");

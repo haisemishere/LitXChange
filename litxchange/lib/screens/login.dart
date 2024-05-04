@@ -31,20 +31,9 @@ class _LoginState extends State<Login> {
         );
 
       } on FirebaseAuthException catch (ex) {
-        // Display error message for invalid credentials
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Login Failed'),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text('Invalid email or password.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
           ),
         );
       }
@@ -166,6 +155,8 @@ class _LoginState extends State<Login> {
                     SizedBox(height: 30),
                     Container(
                       height: 50,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: LinearGradient(

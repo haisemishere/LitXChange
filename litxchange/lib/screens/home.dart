@@ -224,36 +224,16 @@ Future<String> _fetchUsername(String userId) async {
         'timestamp': DateTime.now(),
       });
 
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Request Successful'),
-          content: Text('Request sent successfully'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Post Added Successfully.'),
         ),
       );
     } catch (error) {
       print('Error saving notification: $error');
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Request Failed'),
-          content: Text('Unable to send request. Error: $error'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to send request'),
         ),
       );
     }

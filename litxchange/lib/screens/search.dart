@@ -380,36 +380,16 @@ void sendReq(BuildContext context,
       'timestamp': DateTime.now(),
     });
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Request Successful'),
-        content: Text('Request sent successfully'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('OK'),
-          ),
-        ],
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Request sent successfully.'),
       ),
     );
   } catch (error) {
     print('Error saving notification: $error');
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Request Failed'),
-        content: Text('Unable to send request. Error: $error'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('OK'),
-          ),
-        ],
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Unable to send request'),
       ),
     );
   }

@@ -98,20 +98,9 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
 
     } catch (error) {
       print('Error creating/updating profile: $error');
-      // Show error dialog
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Profile Creation Failed'),
-          content: Text('Invalid information'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invalid Information'),
         ),
       );
     }
