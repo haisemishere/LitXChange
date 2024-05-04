@@ -102,7 +102,8 @@ class _SearchPageState extends State<SearchPage> {
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search by ${_searchOption.toString().split('.').last}',
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: Icon(Icons.search,
+                          color: Color(0xFF457a8b)),
                     ),
                   ),
                 ),
@@ -291,7 +292,8 @@ class _SearchPageState extends State<SearchPage> {
                                     }
                                     if (!snapshot.data!) {
                                       return IconButton(
-                                        icon: Icon(Icons.swap_horiz),
+                                        icon: Icon(Icons.swap_horiz,
+                                            color: Color(0xFF457a8b)),
                                         onPressed: () {
                                           showDialog(
                                             context: context,

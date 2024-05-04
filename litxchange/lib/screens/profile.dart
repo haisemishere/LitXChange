@@ -76,7 +76,8 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text('Profile'),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: Icon(Icons.edit,
+                color: Color(0xFF457a8b)),
             onPressed: () async {
               await Navigator.push(
                 context,
@@ -95,7 +96,8 @@ class _ProfilePageState extends State<ProfilePage> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: Icon(Icons.logout,
+                color: Color(0xFF457a8b)),
             onPressed: () {
               showDialog(
                 context: context,
@@ -110,7 +112,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.pop(
                               context); // Close the dialog
                         },
-                        child: Text("Cancel"),
+                        child: Text("Cancel",
+                          style: TextStyle(color: Color(0xFF457a8b)),),
                       ),
                       TextButton(
                         onPressed: () async {
@@ -123,7 +126,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           );
 
                         },
-                        child: Text("Logout"),
+                        child: Text("Logout",
+                          style: TextStyle(color: Color(0xFF457a8b)),),
                       ),
                     ],
                   );
@@ -270,7 +274,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete),
+                            icon: Icon(Icons.delete,
+                                color: Color(0xFF457a8b)),
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -285,8 +290,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                           Navigator.pop(
                                               context); // Close the dialog
                                         },
-                                        child: Text("Cancel"),
-                                      ),
+                                        child: Text("Cancel",
+                                        style: TextStyle(color: Color(0xFF457a8b)),),),
+
                                       TextButton(
                                         onPressed: () async {
                                           // Delete the post from Firestore
@@ -297,7 +303,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                           Navigator.pop(
                                               context); // Close the dialog
                                         },
-                                        child: Text("Delete"),
+                                        child: Text("Delete",
+                                          style: TextStyle(color: Color(0xFF457a8b)),),
                                       ),
                                     ],
                                   );

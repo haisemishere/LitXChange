@@ -120,7 +120,8 @@ class HomePage extends StatelessWidget {
                                       }
                                       if (!snapshot.data!) {
                                         return IconButton(
-                                          icon: Icon(Icons.swap_horiz),
+                                          icon: Icon(Icons.swap_horiz,
+                                              color: Color(0xFF457a8b)),
                                           onPressed: () {
                                             showDialog(
                                               context: context,
@@ -132,7 +133,8 @@ class HomePage extends StatelessWidget {
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
-                                                    child: Text("Cancel"),
+                                                    child: Text("Cancel",
+                                                      style: TextStyle(color: Color(0xFF457a8b)),),
                                                   ),
                                                   TextButton(
                                                     onPressed: () {
@@ -144,7 +146,8 @@ class HomePage extends StatelessWidget {
                                                         ),
                                                       );
                                                     },
-                                                    child: Text('Send'),
+                                                    child: Text('Send',
+                                                      style: TextStyle(color: Color(0xFF457a8b)),),
                                                   ),
                                                 ],
                                               ),

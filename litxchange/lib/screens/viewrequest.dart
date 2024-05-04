@@ -80,7 +80,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                               onPressed: () {
                                 Navigator.pop(context); // Close the dialog
                               },
-                              child: Text("Cancel"),
+                              child: Text("Cancel",
+                                style: TextStyle(color: Color(0xFF457a8b)),),
                             ),
                             TextButton(
                               onPressed: () async {
@@ -113,7 +114,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   // Handle error if needed
                                 }
                               },
-                              child: Text("Reject"),
+                              child: Text("Reject",
+                                style: TextStyle(color: Color(0xFF457a8b)),),
                             ),
                           ],
                         );
@@ -223,7 +225,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.check_circle),
+                            icon: Icon(Icons.check_circle,
+                                color: Color(0xFF457a8b)),
                             // Use the check_box_outline_blank icon
                             onPressed: () {
                               showDialog(
@@ -239,7 +242,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                           Navigator.pop(
                                               context); // Close the dialog
                                         },
-                                        child: Text("Cancel"),
+                                        child: Text("Cancel",
+                                          style: TextStyle(color: Color(0xFF457a8b)),),
                                       ),
                                       TextButton(
                                         onPressed: () async {
@@ -290,7 +294,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
 
                                           // Close the dialog
                                         },
-                                        child: Text("Swap"),
+                                        child: Text("Swap",
+                                          style: TextStyle(color: Color(0xFF457a8b)),),
                                       ),
                                     ],
                                   );
