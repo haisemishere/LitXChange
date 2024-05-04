@@ -82,38 +82,13 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         child: Container(
           child: Column(
             children: <Widget>[
+              SizedBox(height: 80),
               Image.asset(
                 'assets/images/logo.png',
                 width: 800,
                 height: 250,
               ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  margin: EdgeInsets.only(top: 0),
-                  child: Center(
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        color: Color.fromRGBO(69, 122, 139, 1.0),
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Times New Roman',
-                        letterSpacing: 1.5,
-                        shadows: [
-                          Shadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            offset: Offset(2, 2),
-                            blurRadius: 3,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+
               Padding(
                 padding: EdgeInsets.all(30.0),
                 child: Column(
@@ -182,7 +157,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                     // Conditional button based on verification status
                     if (!_verificationEmailSent)
                       Container(
-                        height: 50,
+                        height: 60,
                         width: double.infinity,
                         margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                         decoration: BoxDecoration(
@@ -205,7 +180,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                       ),
                     if (_verificationEmailSent)
                       Container(
-                        height: 50,
+                        height: 60,
                         width: double.infinity,
                         margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                         decoration: BoxDecoration(

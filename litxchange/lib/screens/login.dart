@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '/screens/login_signup_page.dart';
-import '/screens/createuserprofile.dart';
 import '/screens/master.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -48,42 +46,12 @@ class _LoginState extends State<Login> {
         child: Container(
           child: Column(
             children: <Widget>[
+              SizedBox(height: 80),
               Image.asset(
-                'assets/images/logo.png'
-                    , // Adjust the asset path as per your project structure
+                'assets/images/logo.png',
                 width: 800, // Adjust width as needed
                 height: 250, // Adjust height as needed
               ) ,
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                margin: EdgeInsets.only(top: 0), // Adjust the top margin as needed
-                child: Center(
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                      color: Color.fromRGBO(69, 122, 139, 1.0),
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Times New Roman', // Set font family to Times New Roman
-                      letterSpacing: 1.5, // Optional: Adjust letter spacing
-                      shadows: [
-                        Shadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          offset: Offset(2, 2),
-                          blurRadius: 3,
-                        ),
-                      ], // Optional: Add text shadow
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-
-
               Padding(
                 padding: EdgeInsets.all(40.0),
                 child: Column(
@@ -154,7 +122,7 @@ class _LoginState extends State<Login> {
                     ),
                     SizedBox(height: 30),
                     Container(
-                      height: 50,
+                      height: 60,
                       width: double.infinity,
                       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                       decoration: BoxDecoration(
