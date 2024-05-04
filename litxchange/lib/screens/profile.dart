@@ -198,6 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
       stream: FirebaseFirestore.instance
           .collection('posts')
           .where('userId', isEqualTo: _userId) // Filter posts by current user's ID
+          .orderBy('date', descending: true)
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
