@@ -226,7 +226,7 @@ Future<String> _fetchUsername(String userId) async {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Post Added Successfully.'),
+          content: Text('Request sent successfully'),
         ),
       );
     } catch (error) {
