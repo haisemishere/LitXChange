@@ -24,6 +24,7 @@ class HomePage extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection('posts')
             .where('userId', isNotEqualTo: currentUserUid)
+            .orderBy('date', descending: true)
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
