@@ -81,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
             .collection('posts')
             .where(fieldName, isEqualTo: searchText)
             .where('userId', isNotEqualTo: currentUserUid)
-            //.orderBy('date', descending: true)
+            .orderBy('date', descending: true)
             .snapshots();
       }
     } else {
