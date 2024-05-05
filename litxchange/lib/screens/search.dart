@@ -24,7 +24,12 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    _searchStream = FirebaseFirestore.instance.collection('posts').where('userId', isNotEqualTo: currentUserUid).snapshots();
+    _searchStream = FirebaseFirestore.instance
+        .collection('posts')
+        .where('userId', isNotEqualTo: currentUserUid)
+        .orderBy('date', descending: true)
+        .snapshots();
+
   }
 
   Future<String> _fetchUserid(String userName) async {
@@ -68,6 +73,7 @@ class _SearchPageState extends State<SearchPage> {
             .collection('posts')
             .where('userId', isEqualTo: userId)
             .where('userId', isNotEqualTo: currentUserUid)
+            .orderBy('date', descending: true)
             .snapshots();
       }
       else {
@@ -75,10 +81,15 @@ class _SearchPageState extends State<SearchPage> {
             .collection('posts')
             .where(fieldName, isEqualTo: searchText)
             .where('userId', isNotEqualTo: currentUserUid)
+            //.orderBy('date', descending: true)
             .snapshots();
       }
     } else {
-      _searchStream = FirebaseFirestore.instance.collection('posts').where('userId', isNotEqualTo: currentUserUid).snapshots();
+      _searchStream = FirebaseFirestore.instance
+          .collection('posts')
+          .where('userId', isNotEqualTo: currentUserUid)
+          .orderBy('date', descending: true)
+          .snapshots();
     }
     setState(() {});
   }
