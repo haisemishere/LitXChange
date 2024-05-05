@@ -107,7 +107,7 @@ class _HomeState extends State<Home> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
+          selectedItemColor: Color(0xFF457a8b),
           unselectedItemColor: Colors.black,
           onTap: _onItemTapped,
         ),

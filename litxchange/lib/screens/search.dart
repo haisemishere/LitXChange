@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:litxchange/screens/master.dart';
+import 'dart:ui';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -68,7 +69,7 @@ class _SearchPageState extends State<SearchPage> {
 
     if (searchText.isNotEmpty) {
       if(fieldName=='userId'){
-        String userId = await _fetchUserid(searchText); // Wait for the async operation to complete
+        String userId = await _fetchUserid(searchText);
         _searchStream = FirebaseFirestore.instance
             .collection('posts')
             .where('userId', isEqualTo: userId)
@@ -150,6 +151,7 @@ class _SearchPageState extends State<SearchPage> {
                       _searchOption = value!;
                     });
                   },
+                  activeColor:Color(0xFF457a8b) ,
                 ),
                 Text('Book Name'),
                 Radio(
@@ -160,6 +162,7 @@ class _SearchPageState extends State<SearchPage> {
                       _searchOption = value!;
                     });
                   },
+                  activeColor:Color(0xFF457a8b) ,
                 ),
                 Text('Author Name'),
                 Radio(
@@ -170,6 +173,7 @@ class _SearchPageState extends State<SearchPage> {
                       _searchOption = value!;
                     });
                   },
+                  activeColor:Color(0xFF457a8b) ,
                 ),
                 Text('User Name'),
               ],
@@ -201,9 +205,9 @@ class _SearchPageState extends State<SearchPage> {
       stream: _searchStream,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Center(child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
+          ));
         }
         if (snapshot.hasError) {
           return Center(
@@ -225,20 +229,28 @@ class _SearchPageState extends State<SearchPage> {
                 post['condition'] ?? 'Unknown Condition';
             var formattedDate = DateFormat.yMMMMd().format(date);
             return FutureBuilder(
-              future: _fetchUsername(post['userId']),
-              builder: (context, AsyncSnapshot<String> usernameSnapshot) {
-                if (usernameSnapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (usernameSnapshot.hasError) {
-                  return Text('Error: ${usernameSnapshot.error}');
+              future: Future.wait([
+                _fetchUsername(post['userId']),
+                _fetchCity(post['userId']),
+              ]),
+              builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
                 } else {
-                  String username = usernameSnapshot.data ?? 'Unknown User';
+                  String username = snapshot.data![0] ?? 'Unknown User';
                   String authorName = post['authorName'] ?? 'Unknown Author';
+                  String city = snapshot.data![1] ?? 'Unknown City';
 
                   return Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     child: Card(
                       elevation: 3,
                       shape: RoundedRectangleBorder(
@@ -278,14 +290,14 @@ class _SearchPageState extends State<SearchPage> {
                             fit: BoxFit.cover,
                           )
                               : SizedBox.shrink(),
-                          SizedBox(height: 8.0),
+                          SizedBox(height: 16.0),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  username,
+                                  '$username from $city',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -315,7 +327,8 @@ class _SearchPageState extends State<SearchPage> {
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
-                                                  child: Text("Cancel"),
+                                                  child: Text("Cancel",
+                                                    style: TextStyle(color: Color(0xFF457a8b)),),
                                                 ),
                                                 TextButton(
                                                   onPressed: () {
@@ -327,7 +340,8 @@ class _SearchPageState extends State<SearchPage> {
                                                       ),
                                                     );
                                                   },
-                                                  child: Text('Send'),
+                                                  child: Text('Send',
+                                                    style: TextStyle(color: Color(0xFF457a8b)),),
                                                 ),
                                               ],
                                             ),
@@ -339,6 +353,7 @@ class _SearchPageState extends State<SearchPage> {
                                   },
                                 ),
                               ],
+
                             ),
                           ),
                           SizedBox(height: 8.0),
@@ -353,6 +368,20 @@ class _SearchPageState extends State<SearchPage> {
         );
       },
     );
+  }
+}
+
+
+Future<String> _fetchCity(String userId) async {
+  try {
+    DocumentSnapshot userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
+    return userData['city'] ?? 'Unknown City';
+  } catch (error) {
+    print("Error fetching city: $error");
+    return 'Unknown City';
   }
 }
 

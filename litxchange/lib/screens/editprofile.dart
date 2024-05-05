@@ -113,7 +113,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             TextButton(
               onPressed: _pickImage,
-              child: Text("Change Profile Picture"),
+              child: Text("Change Profile Picture",
+                style: TextStyle(
+                  color: Color(0xFF457a8b), // Change the color here
+                ),),
             ),
             Text(
               'Email: ${widget.userEmail}',
@@ -126,7 +129,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
               controller: _usernameController,
               decoration: InputDecoration(
                 hintText: 'Enter Username',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
                 errorText: _userName,
               ),
             ),
@@ -137,7 +159,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
               controller: _bioController,
               decoration: InputDecoration(
                 hintText: 'Enter a short description about yourself',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -147,11 +188,43 @@ class _EditProfilePageState extends State<EditProfilePage> {
               controller: _cityController,
               decoration: InputDecoration(
                 hintText: 'Enter your city',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFF457a8b),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
+            Container(
+            height: 60,
+    width: double.infinity,
+    margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+    decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(10),
+    gradient: LinearGradient(
+    colors: [
+    Color.fromRGBO(69, 122, 139, 1.0),
+    Color.fromRGBO(69, 122, 139, 1.0),
+    ],
+    ),
+    ),
+            child:ElevatedButton(
               onPressed: () async {
                 final user = FirebaseAuth.instance.currentUser;
                 final userId = user!.uid;
@@ -177,6 +250,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 'Save',
                 style: TextStyle(fontSize: 16), // Button text style
               ),
+            ),
             ),
           ],
         ),

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:ui';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -119,6 +120,16 @@ class _AddPageState extends State<AddPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Center(
+              child:TextButton(
+                  onPressed: _getImage,
+                  child: Text(
+                    'Pick Image',
+                    style: TextStyle(color: Color(0xFF457a8b),fontSize: 16,fontWeight: FontWeight.bold), // Button text style
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
               Text(
                 'Book Name',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -128,7 +139,26 @@ class _AddPageState extends State<AddPage> {
                 controller: _bookNameController,
                 decoration: InputDecoration(
                   hintText: 'Enter the book name',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
                   errorText: _bookNameError,
                 ),
               ),
@@ -142,7 +172,26 @@ class _AddPageState extends State<AddPage> {
                 controller: _authorNameController,
                 decoration: InputDecoration(
                   hintText: 'Enter the Author Name',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
                   errorText: _authorNameError,
                 ),
               ),
@@ -159,10 +208,32 @@ class _AddPageState extends State<AddPage> {
                     _selectedCondition = newValue!;
                   });
                 },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                ),
                 items: _conditionItems.map((condition) {
                   return DropdownMenuItem<String>(
                     value: condition,
-                    child: Text(condition),
+                    child: Text(condition,),
                   );
                 }).toList(),
               ),
@@ -179,6 +250,28 @@ class _AddPageState extends State<AddPage> {
                     _selectedGenre = newValue!;
                   });
                 },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                ),
                 items: _genreItems.map((genre) {
                   return DropdownMenuItem<String>(
                     value: genre,
@@ -187,22 +280,7 @@ class _AddPageState extends State<AddPage> {
                 }).toList(),
               ),
               SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _getImage,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Color(0xFF457a8b), // Text color
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Button border radius
-                  ),
-                  elevation: 3, // Button shadow
-                ),
-                child: Text(
-                  'Pick Image',
-                  style: TextStyle(fontSize: 16), // Button text style
-                ),
-              ),
-              SizedBox(height: 16),
+
               _image != null
                   ? Container(
                 height: 200,
@@ -217,7 +295,20 @@ class _AddPageState extends State<AddPage> {
               )
                   : SizedBox.shrink(),
               SizedBox(height: 16),
-              ElevatedButton(
+              Container(
+                height: 60,
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromRGBO(69, 122, 139, 1.0),
+                      Color.fromRGBO(69, 122, 139, 1.0),
+                    ],
+                  ),
+                ),
+              child: ElevatedButton(
                 onPressed: () {
                   _savePost();
                 },
@@ -233,7 +324,8 @@ class _AddPageState extends State<AddPage> {
                   'Post',
                   style: TextStyle(fontSize: 16), // Button text style
                 ),
-              ),
+              ),),
+
             ],
           ),
         ),

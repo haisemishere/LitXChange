@@ -130,7 +130,26 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
                 controller: _userNameController,
                 decoration: InputDecoration(
                   hintText: 'Enter Username',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -140,7 +159,26 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
                 controller: _bioController,
                 decoration: InputDecoration(
                   hintText: 'Enter a short description about yourself',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -150,7 +188,26 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
                 controller: _cityController,
                 decoration: InputDecoration(
                   hintText: 'Enter your city',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFF457a8b),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 20),

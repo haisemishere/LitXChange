@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '/screens/viewrequest.dart';
+import 'dart:ui';
 
 class NotificationsPage extends StatelessWidget {
   @override
@@ -15,7 +16,9 @@ class NotificationsPage extends StatelessWidget {
         future: _fetchNotifications(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
+            ));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -25,7 +28,9 @@ class NotificationsPage extends StatelessWidget {
               future: _buildListTiles(snapshot.data!, context),
               builder: (context, listSnapshot) {
                 if (listSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
+                  ));
                 } else if (listSnapshot.hasError) {
                   return Center(child: Text('Error: ${listSnapshot.error}'));
                 } else {
@@ -84,6 +89,19 @@ class NotificationsPage extends StatelessWidget {
     }
   }
 
+  Future<String> _fetchCity(String userId) async {
+    try {
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      return userData['city'] ?? 'Unknown City';
+    } catch (error) {
+      print("Error fetching city: $error");
+      return 'Unknown City';
+    }
+  }
+
   Future<String> _fetchBookName(String postId) async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -116,9 +134,10 @@ class NotificationsPage extends StatelessWidget {
       try {
         String bookName = await _fetchBookName(document['postId']);
         String userName = await _fetchUsername(document['userId']);
+        String city =await _fetchCity(document['userId']);
         listTiles.add(
           ListTile(
-            title: Text('Swap Request from $userName'),
+            title: Text('$userName from $city sent Swap Request'),
             subtitle: Text('for $bookName'),
             trailing: ElevatedButton(
               onPressed: () {

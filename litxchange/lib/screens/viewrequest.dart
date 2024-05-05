@@ -6,6 +6,7 @@ import 'package:mailer/smtp_server.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:litxchange/screens/master.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:ui';
 
 class GoogleAuthApi
 {
@@ -154,9 +155,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       stream: _userPostsStream,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Center(child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
+          ));
         }
         if (snapshot.hasError) {
           return Center(
@@ -339,6 +340,19 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     } catch (error) {
       print("Error fetching username: $error");
       return 'Unknown User';
+    }
+  }
+
+  Future<String> _fetchCity(String userId) async {
+    try {
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      return userData['city'] ?? 'Unknown City';
+    } catch (error) {
+      print("Error fetching city: $error");
+      return 'Unknown City';
     }
   }
 

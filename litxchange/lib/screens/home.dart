@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:litxchange/screens/master.dart';
+import 'dart:ui';
 
 class HomePage extends StatelessWidget {
   @override
@@ -28,7 +29,9 @@ class HomePage extends StatelessWidget {
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
+            ));
           }
           if (snapshot.hasError) {
             return Center(
@@ -44,17 +47,25 @@ class HomePage extends StatelessWidget {
               String bookCondition = post['condition'] ?? 'Unknown Condition';
               var formattedDate = DateFormat.yMMMMd().format(date);
               return FutureBuilder(
-                future: _fetchUsername(post['userId']),
-                builder: (context, AsyncSnapshot<String> usernameSnapshot) {
-                  if (usernameSnapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (usernameSnapshot.hasError) {
+                future: Future.wait([
+                  _fetchUsername(post['userId']),
+                  _fetchCity(post['userId']),
+                ]),
+                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
-                      child: Text('Error: ${usernameSnapshot.error}'),
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
                     );
                   } else {
-                    String username = usernameSnapshot.data ?? 'Unknown User';
+                    String username = snapshot.data![0] ?? 'Unknown User';
                     String authorName = post['authorName'] ?? 'Unknown Author';
+                    String city = snapshot.data![1] ?? 'Unknown City';
 
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -104,7 +115,7 @@ class HomePage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    username,
+                                    '$username from $city',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -211,6 +222,19 @@ Future<String> _fetchUsername(String userId) async {
     } catch (error) {
       print("Error fetching username: $error");
       return 'Unknown User';
+    }
+  }
+
+  Future<String> _fetchCity(String userId) async {
+    try {
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      return userData['city'] ?? 'Unknown City';
+    } catch (error) {
+      print("Error fetching city: $error");
+      return 'Unknown City';
     }
   }
 
