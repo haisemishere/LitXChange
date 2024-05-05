@@ -2,7 +2,7 @@
     <uses-permission android:name="android.permission.INTERNET"/> <!-- Internet permission added here -->
 
     <application
-        android:label="litxchange"
+        android:label="LitXChange"
         android:name="androidx.multidex.MultiDexApplication"
         android:icon="@mipmap/ic_launcher">
         <activity

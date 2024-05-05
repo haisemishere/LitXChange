@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:litxchange/screens/master.dart';
+import 'package:LitXChange/screens/master.dart';
 import 'dart:ui';
 
 class SearchPage extends StatefulWidget {

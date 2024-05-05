@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:litxchange/screens/master.dart';
+import 'package:LitXChange/screens/master.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:ui';
 
@@ -84,6 +84,10 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                               onPressed: () {
                                 Navigator.pop(context); // Close the dialog
                               },
+                              style: ButtonStyle(
+                                foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF457a8b)), // Change highlight color
+                              ),
+
                               child: Text(
                                 "Cancel",
                                 style: TextStyle(color: Color(0xFF457a8b)),
@@ -119,6 +123,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   // Handle error if needed
                                 }
                               },
+                              style: ButtonStyle(
+                                foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF457a8b)), // Change highlight color
+                              ),
                               child: Text(
                                 "Reject",
                                 style: TextStyle(color: Color(0xFF457a8b)),
@@ -249,6 +256,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                           Navigator.pop(
                                               context); // Close the dialog
                                         },
+                                        style: ButtonStyle(
+                                          foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF457a8b)), // Change highlight color
+                                        ),
                                         child: Text("Cancel",
                                           style: TextStyle(color: Color(0xFF457a8b)),),
                                       ),
@@ -299,8 +309,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                             ),
                                           );
 
-                                          // Close the dialog
+
                                         },
+                                        style: ButtonStyle(
+                                          foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF457a8b)), // Change highlight color
+                                        ),
                                         child: Text("Swap",
                                           style: TextStyle(color: Color(0xFF457a8b)),),
                                       ),
@@ -346,19 +359,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     } catch (error) {
       print("Error fetching username: $error");
       return 'Unknown User';
-    }
-  }
-
-  Future<String> _fetchCity(String userId) async {
-    try {
-      DocumentSnapshot userData = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-      return userData['city'] ?? 'Unknown City';
-    } catch (error) {
-      print("Error fetching city: $error");
-      return 'Unknown City';
     }
   }
 

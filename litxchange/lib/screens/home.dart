@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:litxchange/screens/master.dart';
+import 'package:LitXChange/screens/master.dart';
 import 'dart:ui';
 
 class HomePage extends StatelessWidget {
@@ -145,6 +145,9 @@ class HomePage extends StatelessWidget {
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
+                                                    style: ButtonStyle(
+                                                      foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF457a8b)), // Change highlight color
+                                                    ),
                                                     child: Text("Cancel",
                                                       style: TextStyle(color: Color(0xFF457a8b)),),
                                                   ),
@@ -158,6 +161,9 @@ class HomePage extends StatelessWidget {
                                                         ),
                                                       );
                                                     },
+                                                    style: ButtonStyle(
+                                                      foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF457a8b)), // Change highlight color
+                                                    ),
                                                     child: Text('Send',
                                                       style: TextStyle(color: Color(0xFF457a8b)),),
                                                   ),

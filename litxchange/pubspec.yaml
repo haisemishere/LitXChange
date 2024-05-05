@@ -1,4 +1,4 @@
-name: litxchange
+name: LitXChange
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -20,6 +20,7 @@ dependencies:
   firebase_storage: ^11.6.8
   mailer: ^5.0.1
   google_sign_in: ^5.0.4
+  flutter_local_notifications: ^17.1.1
 
 dev_dependencies:
   flutter_test:

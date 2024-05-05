@@ -93,7 +93,28 @@ class _HomeState extends State<Home> {
               label: 'Add',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
+              icon: Stack(
+                children: <Widget>[
+                  Icon(Icons.notifications),
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF457a8b),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        '3', // Replace with the actual number of notifications
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               label: 'Notifications',
             ),
             BottomNavigationBarItem(
@@ -113,5 +134,38 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+}
+
+Future<List<String>> _fetchUserPostIds() async {
+  try {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    QuerySnapshot postsSnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .where('userId', isEqualTo: userId)
+        .get();
+    List<String> postIds = [];
+    for (DocumentSnapshot post in postsSnapshot.docs) {
+      postIds.add(post['postId']);
+    }
+    return postIds;
+  } catch (error) {
+    print("Error fetching user post IDs: $error");
+    return [];
+  }
+}
+
+Future<int> getPostCount() async {
+  try {
+    
+    List<String> userPostIds = await _fetchUserPostIds();
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('notifications')
+        .where('postId', whereIn: userPostIds)
+        .get();
+    return snapshot.size;
+  } catch (error) {
+    print("Error fetching post count: $error");
+    return 0; // Return 0 if there's an error
   }
 }

@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:litxchange/screens/login.dart';
-import 'package:litxchange/screens/editprofile.dart';
+import 'package:LitXChange/screens/login.dart';
+import 'package:LitXChange/screens/editprofile.dart';
 import 'dart:ui';
 
 void main() async {
@@ -77,8 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text('Profile'),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit,
-                color: Color(0xFF457a8b)),
+            icon: Icon(Icons.edit, color: Color(0xFF457a8b)),
             onPressed: () async {
               await Navigator.push(
                 context,
@@ -97,24 +96,27 @@ class _ProfilePageState extends State<ProfilePage> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.logout,
-                color: Color(0xFF457a8b)),
+            icon: Icon(Icons.logout, color: Color(0xFF457a8b)),
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text("Logout"),
-                    content: Text(
-                        "Are you sure you want Logout?"),
+                    content: Text("Are you sure you want Logout?"),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(
-                              context); // Close the dialog
+                          Navigator.pop(context); // Close the dialog
                         },
-                        child: Text("Cancel",
-                          style: TextStyle(color: Color(0xFF457a8b)),),
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xFF457a8b)), // Change highlight color
+                        ),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Color(0xFF457a8b)),
+                        ),
                       ),
                       TextButton(
                         onPressed: () async {
@@ -125,18 +127,20 @@ class _ProfilePageState extends State<ProfilePage> {
                               builder: (context) => Login(),
                             ),
                           );
-
                         },
-                        child: Text("Logout",
-                          style: TextStyle(color: Color(0xFF457a8b)),),
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xFF457a8b)), // Change highlight color
+                        ),
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(color: Color(0xFF457a8b)),
+                        ),
                       ),
                     ],
                   );
                 },
               );
-
-
-
             },
           ),
         ],
@@ -145,43 +149,42 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: 30),
             Center(
-              child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(_profilePictureUrl),
-                  backgroundColor: Colors.transparent),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: Text(
-                _username,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(_profilePictureUrl),
+                    backgroundColor: Colors.transparent,
+                  ),
+                  SizedBox(width: 20),
+                  Text(
+                    _username,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    _bio,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    _city,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+
+                ],
               ),
             ),
-            SizedBox(height: 10),
-            Center(
-              child: Text(
-                _bio,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            Center(
-              child: Text(
-                _city,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
             SizedBox(height: 20),
-            Divider(), // Add a divider to separate profile info from posts
+            Divider( color: Color(0xFF457a8b)), // Add a divider to separate profile info from posts
             SizedBox(height: 10),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -194,6 +197,19 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Future<int> getPostCount() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('posts')
+          .where('userId', isEqualTo: _userId)
+          .get();
+      return snapshot.size;
+    } catch (error) {
+      print("Error fetching post count: $error");
+      return 0; // Return 0 if there's an error
+    }
+  }
+
   Widget _buildUserPostsList() {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
@@ -203,9 +219,12 @@ class _ProfilePageState extends State<ProfilePage> {
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
-          ));
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor:
+              AlwaysStoppedAnimation<Color>(Color(0xFF457a8b)),
+            ),
+          );
         }
         if (snapshot.hasError) {
           return Center(
@@ -227,7 +246,8 @@ class _ProfilePageState extends State<ProfilePage> {
             var date = post['date'].toDate();
             var formattedDate = DateFormat.yMMMMd().format(date);
             String authorName = post['authorName'] ?? 'Unknown Author';
-            String bookCondition = post['condition'] ?? 'Unknown Condition';
+            String bookCondition =
+                post['condition'] ?? 'Unknown Condition';
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Card(
@@ -292,9 +312,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                           Navigator.pop(
                                               context); // Close the dialog
                                         },
-                                        child: Text("Cancel",
-                                        style: TextStyle(color: Color(0xFF457a8b)),),),
-
+                                        style: ButtonStyle(
+                                          foregroundColor: MaterialStateProperty
+                                              .all<Color>(
+                                              Color(0xFF457a8b)), // Change highlight color
+                                        ),
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                              color: Color(0xFF457a8b)),
+                                        ),
+                                      ),
                                       TextButton(
                                         onPressed: () async {
                                           // Delete the post from Firestore
@@ -305,8 +333,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                           Navigator.pop(
                                               context); // Close the dialog
                                         },
-                                        child: Text("Delete",
-                                          style: TextStyle(color: Color(0xFF457a8b)),),
+                                        style: ButtonStyle(
+                                          foregroundColor: MaterialStateProperty
+                                              .all<Color>(
+                                              Color(0xFF457a8b)), // Change highlight color
+                                        ),
+                                        child: Text(
+                                          "Delete",
+                                          style: TextStyle(
+                                              color: Color(0xFF457a8b)),
+                                        ),
                                       ),
                                     ],
                                   );
