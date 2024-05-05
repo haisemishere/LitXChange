@@ -47,6 +47,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -60,11 +61,13 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Swap Request for '${widget.bookName}'",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    "Swap Request for '${widget.bookName}'",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 ElevatedButton(
@@ -81,8 +84,10 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                               onPressed: () {
                                 Navigator.pop(context); // Close the dialog
                               },
-                              child: Text("Cancel",
-                                style: TextStyle(color: Color(0xFF457a8b)),),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(color: Color(0xFF457a8b)),
+                              ),
                             ),
                             TextButton(
                               onPressed: () async {
@@ -102,21 +107,22 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          Home(userId: (FirebaseAuth.instance
-                                              .currentUser)!
-                                              .uid,
-                                              idx: 3),
+                                      builder: (context) => Home(
+                                        userId: (FirebaseAuth.instance.currentUser)!
+                                            .uid,
+                                        idx: 3,
+                                      ),
                                     ),
                                   );
                                 } catch (error) {
-                                  print(
-                                      "Error deleting notification: $error");
+                                  print("Error deleting notification: $error");
                                   // Handle error if needed
                                 }
                               },
-                              child: Text("Reject",
-                                style: TextStyle(color: Color(0xFF457a8b)),),
+                              child: Text(
+                                "Reject",
+                                style: TextStyle(color: Color(0xFF457a8b)),
+                              ),
                             ),
                           ],
                         );
@@ -126,8 +132,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Color(0xFF457a8b),
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -148,6 +153,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       ),
     );
   }
+
 
 
   Widget _buildUserPosts() {

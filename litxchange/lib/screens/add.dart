@@ -107,6 +107,8 @@ class _AddPageState extends State<AddPage> {
     });
   }
 
+  bool _isSaving = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,6 +163,7 @@ class _AddPageState extends State<AddPage> {
                   ),
                   errorText: _bookNameError,
                 ),
+                cursorColor:Color(0xFF457a8b),
               ),
               SizedBox(height: 16),
               Text(
@@ -194,6 +197,7 @@ class _AddPageState extends State<AddPage> {
                   ),
                   errorText: _authorNameError,
                 ),
+                cursorColor:Color(0xFF457a8b),
               ),
               SizedBox(height: 16),
               Text(
@@ -230,6 +234,7 @@ class _AddPageState extends State<AddPage> {
                     ),
                   ),
                 ),
+
                 items: _conditionItems.map((condition) {
                   return DropdownMenuItem<String>(
                     value: condition,
@@ -272,6 +277,7 @@ class _AddPageState extends State<AddPage> {
                     ),
                   ),
                 ),
+
                 items: _genreItems.map((genre) {
                   return DropdownMenuItem<String>(
                     value: genre,
@@ -308,31 +314,46 @@ class _AddPageState extends State<AddPage> {
                     ],
                   ),
                 ),
-              child: ElevatedButton(
-                onPressed: () {
-                  _savePost();
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Color(0xFF457a8b), // Text color
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Button border radius
+                child: _isSaving ? Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
-                  elevation: 3, // Button shadow
+                )
+                    : ElevatedButton(
+                  onPressed: () {
+                    // Set _isSaving to true when button is pressed
+                    setState(() {
+                      _isSaving = true;
+                    });
+                    _savePost().then((_) {
+                      // After _savePost() completes, set _isSaving to false
+                      setState(() {
+                        _isSaving = false;
+                      });
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color(0xFF457a8b),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 3,
+                  ),
+                  child: Text(
+                    'Post',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
-                child: Text(
-                  'Post',
-                  style: TextStyle(fontSize: 16), // Button text style
-                ),
-              ),),
-
+              ),
             ],
           ),
         ),
       ),
     );
   }
-  void _savePost() async {
+  Future<void> _savePost() async {
     String bookName = _bookNameController.text.trim();
     String authorName = _authorNameController.text.trim();
     String condition = _selectedCondition;

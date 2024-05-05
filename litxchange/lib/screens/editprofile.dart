@@ -151,6 +151,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
                 errorText: _userName,
               ),
+              cursorColor:Color(0xFF457a8b),
             ),
             SizedBox(height: 20),
             Text('Bio', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -180,6 +181,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
               ),
+              cursorColor:Color(0xFF457a8b),
             ),
             SizedBox(height: 20),
             Text('City', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -209,6 +211,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
               ),
+              cursorColor:Color(0xFF457a8b),
             ),
             SizedBox(height: 20),
             Container(

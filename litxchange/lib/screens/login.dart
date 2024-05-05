@@ -89,8 +89,14 @@ class _LoginState extends State<Login> {
                                 controller: _emailController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  labelStyle: TextStyle(color: Color(0xFF457a8b)),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Color(0xFF457a8b)), // Change border color when focused
+                                  ),
+
                                   labelText: 'Email',
                                 ),
+                                cursorColor:Color(0xFF457a8b),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter an email';
@@ -106,8 +112,13 @@ class _LoginState extends State<Login> {
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  labelStyle: TextStyle(color: Color(0xFF457a8b)),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Color(0xFF457a8b)), // Change border color when focused
+                                  ),
                                   labelText: 'Password',
                                 ),
+                                cursorColor:Color(0xFF457a8b),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter a password';

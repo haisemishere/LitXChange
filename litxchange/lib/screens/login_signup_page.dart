@@ -120,8 +120,13 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                                 controller: _emailController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  labelStyle: TextStyle(color: Color(0xFF457a8b)),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Color(0xFF457a8b)), // Change border color when focused
+                                  ),
                                   labelText: 'Email',
                                 ),
+                                cursorColor:Color(0xFF457a8b),
                                 validator: (value) =>
                                 value!.isEmpty ? 'Please enter an email' : null,
                               ),
@@ -133,8 +138,13 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  labelStyle: TextStyle(color: Color(0xFF457a8b)),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Color(0xFF457a8b)), // Change border color when focused
+                                  ),
                                   labelText: 'Password',
                                 ),
+                                cursorColor:Color(0xFF457a8b),
                                 validator: (value) =>
                                 value!.length < 6 ? 'Password must be at least 6 characters' : null,
                               ),
@@ -144,7 +154,12 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                               child: TextFormField(
                                 controller: _confirmPasswordController,
                                 obscureText: true,
-                                decoration: InputDecoration(labelText: 'Confirm Password'),
+                                decoration: InputDecoration(labelText: 'Confirm Password',
+                                  labelStyle: TextStyle(color: Color(0xFF457a8b)),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Color(0xFF457a8b)), // Change border color when focused
+                                  ),),
+                                cursorColor:Color(0xFF457a8b),
                                 validator: (value) =>
                                 value != _passwordController.text ? 'Passwords do not match' : null,
                               ),
@@ -153,7 +168,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 30,),
+                    SizedBox(height: 20,),
                     // Conditional button based on verification status
                     if (!_verificationEmailSent)
                       Container(
