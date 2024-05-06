@@ -115,7 +115,28 @@ class _SearchPageState extends State<SearchPage> {
                       hintText: 'Search by ${_searchOption.toString().split('.').last}',
                       prefixIcon: Icon(Icons.search,
                           color: Color(0xFF457a8b)),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFF457a8b),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFF457a8b),
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.red,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFF457a8b),
+                        ),
+                      ),
                     ),
+                    cursorColor:Color(0xFF457a8b),
                   ),
                 ),
                 SizedBox(width: 10),
@@ -435,4 +456,5 @@ void sendReq(BuildContext context,
     );
   }
 }
+
 
