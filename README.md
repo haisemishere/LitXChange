@@ -37,5 +37,6 @@ Many individuals have books they no longer need or want, while others are seekin
 4. Open the project in your preferred code editor.
 5. Run `flutter pub get` to install dependencies.
 6. Run `flutter run` to start the application on your connected device or emulator.
+*You can also directly download the apk file to run it on your android mobile phones*
 
 Now, you can explore LitXchange, register, create profiles, list books, and start exchanging books within your local community! 📚🌍
